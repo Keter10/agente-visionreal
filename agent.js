@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT } from './knowledge.js';
 import { getFinancingPlans } from './financing.js';
+import { getAvailableSlots, createEvent, isCalendarReady } from './calendar.js';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -8,14 +9,22 @@ const conversations = new Map();
 const HISTORY_TTL_MS = 30 * 60 * 1000;
 const MAX_HISTORY_MESSAGES = 20;
 
-function getHistory(userId) {
+function getEntry(userId) {
   const entry = conversations.get(userId);
-  if (!entry) return [];
+  if (!entry) return null;
   if (Date.now() - entry.lastActivity > HISTORY_TTL_MS) {
     conversations.delete(userId);
-    return [];
+    return null;
   }
-  return entry.messages;
+  return entry;
+}
+
+function getHistory(userId) {
+  return getEntry(userId)?.messages || [];
+}
+
+function getOfferedSlots(userId) {
+  return getEntry(userId)?.offeredSlots ?? null;
 }
 
 function updateHistory(userId, messages) {
@@ -23,16 +32,33 @@ function updateHistory(userId, messages) {
     messages.length > MAX_HISTORY_MESSAGES
       ? messages.slice(messages.length - MAX_HISTORY_MESSAGES)
       : messages;
-  conversations.set(userId, { messages: trimmed, lastActivity: Date.now() });
+  const current = conversations.get(userId);
+  conversations.set(userId, {
+    messages: trimmed,
+    lastActivity: Date.now(),
+    offeredSlots: current?.offeredSlots ?? null,
+  });
 }
 
-function buildSystemBlocks() {
+function setOfferedSlots(userId, slots) {
+  const entry = conversations.get(userId);
+  if (entry) entry.offeredSlots = slots;
+}
+
+function formatSlotsBlock(slots) {
+  if (!slots?.length) return null;
+  const lines = [
+    '## HORARIOS DISPONIBLES PARA REUNIÓN CON MARTÍN',
+    'Ofrecé estas opciones exactas cuando el cliente quiera agendar. Si el cliente elige una, confirmá el horario elegido.',
+    '',
+  ];
+  slots.forEach((s, i) => lines.push(`Opción ${i + 1}: ${s.label}`));
+  return lines.join('\n');
+}
+
+function buildSystemBlocks(availableSlots = null) {
   const blocks = [
-    {
-      type: 'text',
-      text: SYSTEM_PROMPT,
-      cache_control: { type: 'ephemeral' },
-    },
+    { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
   ];
 
   const financingPlans = getFinancingPlans();
@@ -43,17 +69,22 @@ function buildSystemBlocks() {
     });
   }
 
+  const slotsText = formatSlotsBlock(availableSlots);
+  if (slotsText) {
+    blocks.push({ type: 'text', text: slotsText });
+  }
+
   return blocks;
 }
 
-async function generateResponse(userId, userMessage) {
+async function generateResponse(userId, userMessage, availableSlots = null) {
   const history = getHistory(userId);
   const messages = [...history, { role: 'user', content: userMessage }];
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 1024,
-    system: buildSystemBlocks(),
+    system: buildSystemBlocks(availableSlots),
     messages,
   });
 
@@ -75,6 +106,8 @@ Respondé SOLO con JSON válido, sin texto extra:
 {
   "intent": "ALTA|MEDIA|BAJA|NINGUNA",
   "stage": "saludo|necesidad|presupuesto|presentacion|objecion|cierre|agenda",
+  "wants_meeting": false,
+  "confirmed_slot_index": null,
   "budget_ars": null,
   "payment_type": "contado|financiacion|desconocido",
   "client_name": null,
@@ -90,6 +123,8 @@ Reglas:
 - intent MEDIA: muy interesado, pide modelos específicos, compara opciones, pregunta por financiación
 - intent BAJA: consulta general o informativa
 - intent NINGUNA: queja, off-topic, sin terreno propio, o sin intención real de compra
+- wants_meeting: true si el cliente quiere reunirse, hablar con Martín, agendar o confirmar una fecha/hora
+- confirmed_slot_index: número entero (1-6) SOLO si el cliente eligió una de las opciones de horario ya ofrecidas en el historial ("la opción 2", "el martes", "ese horario", etc.), sino null
 - budget_ars: número en pesos si lo mencionaron, sino null
 - monthly_payment_ars: número en pesos si mencionaron cuota mensual, sino null
 - model_chosen: nombre exacto del modelo si lo eligieron (ej: "VR 47m²"), sino null
@@ -101,7 +136,7 @@ Reglas:
   try {
     const response = await client.messages.create({
       model: 'claude-haiku-4-5',
-      max_tokens: 200,
+      max_tokens: 250,
       messages: [{ role: 'user', content: prompt }],
     });
 
@@ -113,6 +148,8 @@ Reglas:
     return {
       intent: 'NINGUNA',
       stage: 'saludo',
+      wants_meeting: false,
+      confirmed_slot_index: null,
       budget_ars: null,
       payment_type: 'desconocido',
       client_name: null,
@@ -134,7 +171,12 @@ function buildSellerNotification(userId, userMessage, analysis) {
   if (analysis.model_chosen) lines.push(`🏠 *Modelo elegido:* ${analysis.model_chosen}`);
 
   if (analysis.budget_ars) {
-    const paymentLabel = analysis.payment_type === 'contado' ? 'contado' : analysis.payment_type === 'financiacion' ? 'financiado' : analysis.payment_type;
+    const paymentLabel =
+      analysis.payment_type === 'contado'
+        ? 'contado'
+        : analysis.payment_type === 'financiacion'
+          ? 'financiado'
+          : analysis.payment_type;
     lines.push(`💰 *Presupuesto:* $${analysis.budget_ars.toLocaleString('es-AR')} ARS (${paymentLabel})`);
   }
 
@@ -167,15 +209,54 @@ function summarizeHistory(messages) {
 export async function processMessage(userId, userMessage) {
   const historySummary = summarizeHistory(getHistory(userId));
 
-  const [reply, analysis] = await Promise.all([
-    generateResponse(userId, userMessage),
-    analyzeConversation(userMessage, historySummary),
-  ]);
+  // Step 1: fast analysis with Haiku (determines intent and whether scheduling is needed)
+  const analysis = await analyzeConversation(userMessage, historySummary);
+
+  // Step 2: resolve slots — either use stored ones (client confirming) or fetch fresh ones
+  let availableSlots = null;
+  const needsSlots =
+    analysis.wants_meeting || analysis.stage === 'cierre' || analysis.stage === 'agenda';
+
+  if (analysis.confirmed_slot_index) {
+    // Client is picking from a list already shown — reuse stored slots
+    availableSlots = getOfferedSlots(userId);
+  } else if (needsSlots && isCalendarReady()) {
+    availableSlots = await getAvailableSlots();
+  }
+
+  // Step 3: generate Sol's response (slots injected as extra system block, not in history)
+  const reply = await generateResponse(userId, userMessage, availableSlots);
+
+  // Step 4: persist fresh slots so the next turn can reference by index
+  if (availableSlots && !analysis.confirmed_slot_index) {
+    setOfferedSlots(userId, availableSlots);
+  }
+
+  // Step 5: if client confirmed a slot, create the Calendar event
+  let eventCreated = false;
+  if (analysis.confirmed_slot_index) {
+    const storedSlots = getOfferedSlots(userId);
+    const chosenSlot = storedSlots?.[analysis.confirmed_slot_index - 1];
+    if (chosenSlot) {
+      const event = await createEvent(
+        analysis.client_name,
+        userId,
+        analysis.model_chosen,
+        chosenSlot.start,
+        analysis.zone
+      );
+      if (event) {
+        eventCreated = true;
+        setOfferedSlots(userId, null);
+        console.log(`Evento Calendar creado — cliente: ${userId} | slot: ${chosenSlot.label}`);
+      }
+    }
+  }
 
   const notifySeller = analysis.intent === 'ALTA';
   const sellerMessage = notifySeller
     ? buildSellerNotification(userId, userMessage, analysis)
     : null;
 
-  return { reply, notifySeller, sellerMessage, analysis };
+  return { reply, notifySeller, sellerMessage, analysis, eventCreated };
 }
