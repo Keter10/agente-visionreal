@@ -63,9 +63,8 @@ async function generateResponse(userId, userMessage) {
   return assistantMessage;
 }
 
-// Retorna datos estructurados sobre el estado de la conversación para notificar a Martín con contexto útil
 async function analyzeConversation(userMessage, historySummary) {
-  const prompt = `Analizá este intercambio de WhatsApp de venta de viviendas prefabricadas.
+  const prompt = `Analizá este intercambio de WhatsApp de venta de viviendas prefabricadas en Argentina. Precios en PESOS ARGENTINOS.
 
 Historial reciente:
 ${historySummary || '(sin historial previo)'}
@@ -76,27 +75,33 @@ Respondé SOLO con JSON válido, sin texto extra:
 {
   "intent": "ALTA|MEDIA|BAJA|NINGUNA",
   "stage": "saludo|necesidad|presupuesto|presentacion|objecion|cierre|agenda",
-  "budget_usd": null,
+  "budget_ars": null,
   "payment_type": "contado|financiacion|desconocido",
   "client_name": null,
-  "monthly_payment_usd": null,
+  "monthly_payment_ars": null,
+  "model_chosen": null,
+  "zone": null,
+  "preferred_time": null,
   "notes": ""
 }
 
 Reglas:
-- intent ALTA: quiere comprar, pide presupuesto final, pregunta por plazos/reserva, menciona que ya tiene el terreno o cuándo quiere empezar
+- intent ALTA: quiere comprar, pide presupuesto final, menciona que tiene terreno, pregunta cuándo pueden empezar, pide reunión con Martín
 - intent MEDIA: muy interesado, pide modelos específicos, compara opciones, pregunta por financiación
 - intent BAJA: consulta general o informativa
-- intent NINGUNA: queja, off-topic, o sin intención de compra
-- budget_usd: número si lo mencionaron, sino null
-- monthly_payment_usd: número si mencionaron cuota mensual, sino null
+- intent NINGUNA: queja, off-topic, sin terreno propio, o sin intención real de compra
+- budget_ars: número en pesos si lo mencionaron, sino null
+- monthly_payment_ars: número en pesos si mencionaron cuota mensual, sino null
+- model_chosen: nombre exacto del modelo si lo eligieron (ej: "VR 47m²"), sino null
+- zone: provincia o ciudad del terreno si la mencionaron, sino null
+- preferred_time: horario preferido para que Martín llame si lo mencionaron, sino null
 - client_name: nombre si se presentaron, sino null
-- notes: frase corta con contexto relevante para el vendedor (máx 20 palabras)`;
+- notes: frase corta con contexto clave para el vendedor (máx 20 palabras)`;
 
   try {
     const response = await client.messages.create({
       model: 'claude-haiku-4-5',
-      max_tokens: 150,
+      max_tokens: 200,
       messages: [{ role: 'user', content: prompt }],
     });
 
@@ -108,38 +113,45 @@ Reglas:
     return {
       intent: 'NINGUNA',
       stage: 'saludo',
-      budget_usd: null,
+      budget_ars: null,
       payment_type: 'desconocido',
       client_name: null,
-      monthly_payment_usd: null,
+      monthly_payment_ars: null,
+      model_chosen: null,
+      zone: null,
+      preferred_time: null,
       notes: '',
     };
   }
 }
 
 function buildSellerNotification(userId, userMessage, analysis) {
-  const lines = ['🔥 *CLIENTE CON ALTA INTENCIÓN DE COMPRA*', ''];
+  const lines = ['🔥 *CLIENTE LISTO PARA REUNIÓN CON MARTÍN*', ''];
 
   if (analysis.client_name) lines.push(`👤 *Nombre:* ${analysis.client_name}`);
   lines.push(`📱 *WhatsApp:* ${userId}`);
 
-  if (analysis.budget_usd) {
-    const paymentLabel = analysis.payment_type === 'contado' ? 'contado' : analysis.payment_type;
-    lines.push(`💰 *Presupuesto:* $${analysis.budget_usd.toLocaleString('es-AR')} USD (${paymentLabel})`);
+  if (analysis.model_chosen) lines.push(`🏠 *Modelo elegido:* ${analysis.model_chosen}`);
+
+  if (analysis.budget_ars) {
+    const paymentLabel = analysis.payment_type === 'contado' ? 'contado' : analysis.payment_type === 'financiacion' ? 'financiado' : analysis.payment_type;
+    lines.push(`💰 *Presupuesto:* $${analysis.budget_ars.toLocaleString('es-AR')} ARS (${paymentLabel})`);
   }
 
-  if (analysis.monthly_payment_usd) {
-    lines.push(`📅 *Cuota posible:* $${analysis.monthly_payment_usd.toLocaleString('es-AR')} USD/mes`);
+  if (analysis.monthly_payment_ars) {
+    lines.push(`📅 *Cuota posible:* $${analysis.monthly_payment_ars.toLocaleString('es-AR')} ARS/mes`);
   }
 
-  lines.push(`📍 *Etapa:* ${analysis.stage}`);
+  if (analysis.zone) lines.push(`📍 *Zona del terreno:* ${analysis.zone}`);
+  if (analysis.preferred_time) lines.push(`🕐 *Horario preferido:* ${analysis.preferred_time}`);
 
+  lines.push(`📊 *Etapa:* ${analysis.stage}`);
   if (analysis.notes) lines.push(`📝 *Contexto:* ${analysis.notes}`);
 
   lines.push('');
   lines.push(`💬 *Último mensaje:* "${userMessage}"`);
   lines.push('');
-  lines.push('⚡ Contactalo a la brevedad para no perder la oportunidad.');
+  lines.push('⚡ Agendá la reunión a la brevedad — el cliente está listo para avanzar.');
 
   return lines.join('\n');
 }
