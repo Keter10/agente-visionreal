@@ -6,6 +6,7 @@ import { processMessage } from './agent.js';
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use('/catalogos', express.static('catalogos'));
 
 const twilioClient = twilio(
   process.env.TWILIO_ACCOUNT_SID,
