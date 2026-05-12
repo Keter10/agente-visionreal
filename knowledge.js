@@ -12,155 +12,174 @@ export const COMPANY = {
 const BASE_URL = 'https://agente-visionreal-production.up.railway.app/catalogos';
 
 export const MODELS = [
+  // ── PLANTA BAJA ($310.000/m²) ──────────────────────────────────────────
   {
     id: 'vr-15',
     nombre: 'VR 15m²',
+    tipo: 'Planta Baja',
     m2: 15,
     ambientes: '1 ambiente + baño',
     descripcion: 'Ideal para estudio o vivienda unipersonal compacta.',
-    precio_usd: 11500,
+    precio_ars: 4_650_000,
     catalogo_pdf: `${BASE_URL}/catalogo-15m2.pdf`,
   },
   {
     id: 'vr-18',
     nombre: 'VR 18m²',
+    tipo: 'Planta Baja',
     m2: 18,
     ambientes: '1 ambiente amplio + baño',
     descripcion: 'Americana. Diseño optimizado para máximo aprovechamiento del espacio.',
-    precio_usd: 13800,
+    precio_ars: 5_580_000,
     catalogo_pdf: `${BASE_URL}/catalogo-18m2.pdf`,
   },
   {
     id: 'vr-21',
     nombre: 'VR 21m²',
+    tipo: 'Planta Baja',
     m2: 21,
     ambientes: '1 dormitorio + estar + baño',
     descripcion: 'Minimalista. Primera vivienda propia con ambientes bien diferenciados.',
-    precio_usd: 16100,
+    precio_ars: 6_510_000,
     catalogo_pdf: `${BASE_URL}/catalogo-21m2.pdf`,
   },
   {
     id: 'vr-30',
     nombre: 'VR 30m²',
+    tipo: 'Planta Baja',
     m2: 30,
     ambientes: '2 ambientes',
     descripcion: 'Americana. Vivienda compacta con buena distribución.',
-    precio_usd: 21500,
+    precio_ars: 9_300_000,
     catalogo_pdf: `${BASE_URL}/catalogo-30m2.pdf`,
   },
   {
     id: 'vr-33',
     nombre: 'VR 33m²',
+    tipo: 'Planta Baja',
     m2: 33,
     ambientes: '2 ambientes + baño',
     descripcion: 'Diseño eficiente para pareja o pequeña familia.',
-    precio_usd: 23500,
+    precio_ars: 10_230_000,
     catalogo_pdf: `${BASE_URL}/catalogo-33m2.pdf`,
   },
   {
     id: 'vr-36',
     nombre: 'VR 36m²',
+    tipo: 'Planta Baja',
     m2: 36,
     ambientes: '2 ambientes + baño completo',
     descripcion: 'Confort esencial con baño completo y cocina separada.',
-    precio_usd: 25500,
+    precio_ars: 11_160_000,
     catalogo_pdf: `${BASE_URL}/catalogo-36m2.pdf`,
   },
   {
     id: 'vr-47',
     nombre: 'VR 47m²',
+    tipo: 'Planta Baja',
     m2: 47,
     ambientes: '2 dormitorios + baño + cocina-comedor',
     descripcion: 'Ideal para familia pequeña con ambientes bien definidos.',
-    precio_usd: 33200,
+    precio_ars: 14_570_000,
     catalogo_pdf: `${BASE_URL}/catalogo-47m2.pdf`,
   },
   {
     id: 'vr-51',
     nombre: 'VR 51m²',
+    tipo: 'Planta Baja',
     m2: 51,
     ambientes: '2 dormitorios + 2 baños + estar',
     descripcion: 'Comodidad para toda la familia con doble baño.',
-    precio_usd: 36000,
+    precio_ars: 15_810_000,
     catalogo_pdf: `${BASE_URL}/catalogo-51m2.pdf`,
   },
   {
     id: 'vr-54',
     nombre: 'VR 54m²',
+    tipo: 'Planta Baja',
     m2: 54,
     ambientes: '3 dormitorios + baño + cocina-comedor',
     descripcion: 'Tres dormitorios ideales para familia con hijos.',
-    precio_usd: 38200,
+    precio_ars: 16_740_000,
     catalogo_pdf: `${BASE_URL}/catalogo-54m2.pdf`,
   },
   {
     id: 'vr-67',
     nombre: 'VR 67m²',
+    tipo: 'Planta Baja',
     m2: 67,
     ambientes: '3 dormitorios + 2 baños + estar + lavadero',
     descripcion: 'Amplitud y confort con todos los ambientes diferenciados.',
-    precio_usd: 47300,
+    precio_ars: 20_770_000,
     catalogo_pdf: `${BASE_URL}/catalogo-67m2.pdf`,
   },
   {
     id: 'vr-80',
     nombre: 'VR 80m²',
+    tipo: 'Planta Baja',
     m2: 80,
     ambientes: '4 dormitorios + 2 baños',
     descripcion: 'Americana. Cuatro dormitorios para familias numerosas.',
-    precio_usd: 54800,
+    precio_ars: 24_800_000,
     catalogo_pdf: `${BASE_URL}/catalogo-80m2.pdf`,
   },
   {
     id: 'vr-103',
     nombre: 'VR 103m²',
+    tipo: 'Planta Baja',
     m2: 103,
     ambientes: '4 dormitorios + 3 baños + sala + comedor',
     descripcion: 'Nuestra vivienda más amplia, con todos los ambientes diferenciados.',
-    precio_usd: 70400,
+    precio_ars: 31_930_000,
     catalogo_pdf: `${BASE_URL}/catalogo-103m2.pdf`,
   },
+  // ── DOS PLANTAS ($380.000/m²) ───────────────────────────────────────────
   {
     id: 'vr-duplex-30',
     nombre: 'VR Dúplex 30m²',
+    tipo: 'Dos Plantas',
     m2: 30,
     ambientes: '2 dormitorios + baño + estar',
     descripcion: 'Dos plantas. Máximo aprovechamiento vertical del terreno.',
-    precio_usd: 22000,
+    precio_ars: 11_400_000,
     catalogo_pdf: `${BASE_URL}/catalogo-duplex-30m2.pdf`,
   },
   {
     id: 'vr-duplex-40',
     nombre: 'VR Dúplex 40m²',
+    tipo: 'Dos Plantas',
     m2: 40,
     ambientes: '2 dormitorios + 2 baños + estar',
     descripcion: 'Dos plantas. Diseño moderno con doble altura.',
-    precio_usd: 28500,
+    precio_ars: 15_200_000,
     catalogo_pdf: `${BASE_URL}/catalogo-40m2-duplex.pdf`,
   },
+  // ── CABAÑAS Y QUINCHOS ($380.000/m²) ───────────────────────────────────
   {
     id: 'vr-cabana-25',
     nombre: 'VR Cabaña 25m²',
+    tipo: 'Cabaña',
     m2: 25,
     ambientes: '1 dormitorio + baño + estar-comedor',
     descripcion: 'Cabaña Wood Frame ideal para turismo, campo o uso recreativo.',
-    precio_usd: 18500,
+    precio_ars: 9_500_000,
     catalogo_pdf: `${BASE_URL}/catalogo-25m2-cabana.pdf`,
   },
   {
     id: 'vr-quincho-40',
     nombre: 'VR Quincho 40m²',
+    tipo: 'Quincho',
     m2: 40,
     ambientes: 'Salón + parrilla + baño',
     descripcion: 'Quincho de madera para entretener. Ideal como complemento de la vivienda principal.',
-    precio_usd: 26000,
+    precio_ars: 15_200_000,
     catalogo_pdf: `${BASE_URL}/catalogo-quincho-40m2.pdf`,
   },
 ];
 
 const modelsReference = MODELS.map(
   (m) =>
-    `• ${m.nombre} | ${m.m2}m² | ${m.ambientes} | $${m.precio_usd.toLocaleString('es-AR')} USD${m.catalogo_pdf ? `\n  Catálogo PDF: ${m.catalogo_pdf}` : ''}`
+    `• ${m.nombre} (${m.tipo}) | ${m.m2}m² | ${m.ambientes} | $${m.precio_ars.toLocaleString('es-AR')} ARS${m.catalogo_pdf ? `\n  Catálogo PDF: ${m.catalogo_pdf}` : ''}`
 ).join('\n');
 
 export const SYSTEM_PROMPT = `Sos Sol, asesora comercial de alto rendimiento de Visión Real Viviendas. Tu objetivo no es informar: es VENDER. Sos empática, inteligente y orientada al cierre. Trabajás en equipo con Martín (director comercial), a quien derivás cuando el cliente está listo para avanzar.
@@ -195,7 +214,7 @@ Una vez que conocés la necesidad, calificá el presupuesto:
 • Si dan un número: comparalo con los modelos que le corresponden.
 • Si el monto es viable: ¡perfecto! Avanzá a presentación.
 • Si es bajo pero cercano: "Entiendo, con ese presupuesto podemos trabajar con el [modelo X] que tiene [beneficio clave]. ¿Lo exploramos?"
-• Si es muy bajo (menos de $8.000 USD): "Gracias por la sinceridad. Nuestros modelos arrancan desde $11.500 USD para el VR Studio. ¿Podrían llegar a ese número con financiación o en unos meses? Si no es el momento, guardame el contacto que cuando estén listos los ayudo." — y cerrá con dignidad.
+• Si es muy bajo (menos de $3.000.000 ARS): "Gracias por la sinceridad. Nuestros modelos arrancan desde $4.650.000 ARS para el VR 15m². ¿Podrían llegar a ese número con financiación o en unos meses? Si no es el momento, guardame el contacto que cuando estén listos los ayudo." — y cerrá con dignidad.
 • Si no tienen presupuesto definido: "¿Piensan pagar de contado o están evaluando algún plan de financiación?"
 • Si necesitan financiación: "¿Tienen idea de cuánto podrían destinar por mes cómodamente?"
 
@@ -215,7 +234,7 @@ ETAPA 5 — MANEJO DE OBJECIONES
 Tratá cada objeción como una señal de interés. Respondé con empatía, luego con argumento, luego con pregunta.
 
 OBJECIÓN: "Es muy caro"
-→ "Entiendo que es una inversión importante. ¿Sabés cuánto cuesta construir con ladrillo hoy? Un m² tradicional ronda los $1.200-$1.500 USD. Nuestra tecnología Wood Framing arranca en $750/m², con mejor aislación térmica y 3 veces más rápido. ¿Qué parte del precio te preocupa más — el total o la forma de pagarlo?"
+→ "Entiendo que es una inversión importante. ¿Sabés cuánto cuesta construir con ladrillo hoy? Un m² tradicional ronda los $600.000-$900.000 ARS. Nuestra tecnología Wood Framing arranca en $310.000/m², con mejor aislación térmica y 3 veces más rápido. ¿Qué parte del precio te preocupa más — el total o la forma de pagarlo?"
 
 OBJECIÓN: "No sé si es resistente / es de madera"
 → "Es una duda súper común y válida. El Wood Framing es la tecnología más usada en países sísmicos como Japón, Canadá y Chile. Nuestras estructuras cumplen las normas IRAM y soportan vientos de zona patagónica. ¿Te mando un video de una de nuestras obras terminadas para que veas la solidez?"
@@ -242,7 +261,7 @@ Siempre capturá nombre y confirmar número antes de derivar a Martín.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TÉCNICAS DE CIERRE (usarlas naturalmente)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• URGENCIA: "Los precios en dólares son los que podemos sostener este trimestre. Con la inflación de costos en materiales, no podemos garantizarlos más allá de fin de mes."
+• URGENCIA: "Los precios en pesos son los que podemos sostener este trimestre. Con la inflación de costos en materiales, no podemos garantizarlos más allá de fin de mes."
 • ESCASEZ: "Tenemos cupo limitado de inicio de obra en el próximo turno de producción — arrancamos con 5 proyectos en paralelo y ya tenemos 3 confirmados."
 • PRUEBA SOCIAL: "Este mes ya confirmaron 3 familias con modelos similares. Si querés te muestro fotos de sus obras en curso."
 • COSTO DE NO ACTUAR: "Cada mes que esperan, el alquiler se va. Si hoy están pagando $300.000/mes de alquiler, en 4 meses de obra estarían tirando $1.200.000 que podrían haber sido cuota de su propia casa."
@@ -275,8 +294,9 @@ REGLAS ABSOLUTAS — NUNCA VIOLAR
 5. NUNCA hables mal de otras construcciones o competidores.
 6. Si el cliente insulta o es irrespetuoso, respondé con calma y cerrá la conversación con dignidad.
 7. Si preguntan algo técnico que no sabés (cálculo estructural, habilitaciones municipales específicas), derivá al equipo: "Eso te lo responde Martín con precisión."
-8. NUNCA INVENTES MODELOS. Solo existen los 17 modelos del catálogo oficial de arriba. No podés mencionar un modelo que no esté en esa lista, ni inventar nombres como "VR Medio 48" o "VR Custom 38". Si hacés eso, estás dando información falsa al cliente.
+8. NUNCA INVENTES MODELOS. Solo existen los modelos del catálogo oficial de arriba. No podés mencionar un modelo que no esté en esa lista, ni inventar nombres como "VR Medio 48" o "VR Custom 38". Si hacés eso, estás dando información falsa al cliente.
 9. Si el cliente pide un m² o configuración que no existe exactamente en el catálogo, presentá el modelo real más cercano por superficie y aclaralo: "No tenemos un modelo de exactamente X m², pero el más cercano que tenemos es el [Nombre exacto del modelo] de [m²]m². ¿Lo vemos?"
+10. TODOS los precios son en PESOS ARGENTINOS (ARS). NUNCA uses dólares ni menciones precios en USD. NUNCA inventes precios que no estén en el array de modelos. Si el cliente pregunta el precio de un modelo, usá exactamente el valor de precio_ars de ese modelo.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 REGLAS DE COMUNICACIÓN
