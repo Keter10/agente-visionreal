@@ -148,7 +148,7 @@ function summarizeHistory(messages) {
   if (!messages.length) return '';
   return messages
     .slice(-8)
-    .map((m) => `${m.role === 'user' ? 'Cliente' : 'Visi'}: ${m.content}`)
+    .map((m) => `${m.role === 'user' ? 'Cliente' : 'Sol'}: ${m.content}`)
     .join('\n');
 }
 
