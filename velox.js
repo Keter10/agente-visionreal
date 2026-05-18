@@ -8,8 +8,7 @@ const NEGOCIO_ID = 'fb0b9b4f-97dd-4b91-ac2c-3fe68dc74d75';
 const SERVICIO_ID = '3a15d947-2a0f-4596-9701-5abc1a579f24';
 const LOCAL_ID = '72e60578-27eb-466b-a930-4fe27f29a262';
 
-const WORK_START = 9;
-const WORK_END = 18;
+const DAY_MAP = { dom: 0, lun: 1, mar: 2, mie: 3, jue: 4, vie: 5, sab: 6 };
 
 const HEADERS = {
   apikey: ANON_KEY,
@@ -36,16 +35,32 @@ function formatLabel(date, hour) {
   return `${days[date.getDay()]} ${date.getDate()} de ${months[date.getMonth()]} a las ${h12}${ampm}`;
 }
 
-function getBusinessDays(count) {
+function getWorkingDays(count, activeDays) {
   const days = [];
   const cursor = getArgentinaDate();
   cursor.setDate(cursor.getDate() + 1);
   cursor.setHours(0, 0, 0, 0);
   while (days.length < count) {
-    if (cursor.getDay() !== 0) days.push(new Date(cursor));
+    if (activeDays.has(cursor.getDay())) days.push(new Date(cursor));
     cursor.setDate(cursor.getDate() + 1);
   }
   return days;
+}
+
+async function getSchedule() {
+  const res = await axios.get(
+    `${SUPABASE_URL}/rest/v1/locales?negocio_id=eq.${NEGOCIO_ID}&select=dias_atencion,horario_apertura,horario_cierre`,
+    { headers: HEADERS }
+  );
+  const local = res.data[0];
+  if (!local) throw new Error('No se encontró configuración en tabla locales');
+  const activeDays = new Set(
+    (local.dias_atencion || []).map((d) => DAY_MAP[d]).filter((n) => n !== undefined)
+  );
+  const workStart = parseInt(local.horario_apertura?.slice(0, 2) ?? '9', 10);
+  const workEnd = parseInt(local.horario_cierre?.slice(0, 2) ?? '18', 10);
+  console.log(`Horario Velox: días=${[...activeDays]} apertura=${workStart}hs cierre=${workEnd}hs`);
+  return { activeDays, workStart, workEnd };
 }
 
 async function getOccupiedHours(fecha) {
@@ -75,14 +90,16 @@ async function getOccupiedHours(fecha) {
 
 export async function getAvailableSlots() {
   try {
-    const days = getBusinessDays(6);
+    const { activeDays, workStart, workEnd } = await getSchedule();
+    // Look ahead up to 14 days to find 6 available slots
+    const days = getWorkingDays(14, activeDays);
     const slots = [];
 
     for (const day of days) {
       const fechaStr = formatDate(day);
       const occupied = await getOccupiedHours(fechaStr);
 
-      for (let h = WORK_START; h < WORK_END; h++) {
+      for (let h = workStart; h < workEnd; h++) {
         const horaStr = `${String(h).padStart(2, '0')}:00`;
         if (occupied.has(horaStr)) continue;
 
