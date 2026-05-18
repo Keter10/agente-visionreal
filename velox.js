@@ -148,7 +148,7 @@ export async function createTurno(clientName, clientPhone, slotFecha, slotHora, 
       monto_sena: 0,
       monto_total: 0,
       cliente_id: clienteId,
-      notas: notes || `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
+      notas: (notes && notes.trim()) ? notes.trim() : `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
     };
     console.log('Creando turno en Velox - URL:', `${base}/turnos`);
     console.log('Creando turno en Velox - Body:', JSON.stringify(body, null, 2));

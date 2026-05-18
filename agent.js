@@ -278,6 +278,7 @@ export async function processMessage(userId, userMessage) {
         analysis.notes ? `Notas: ${analysis.notes}` : null,
       ].filter(Boolean).join(' | ') || `Turno agendado por WhatsApp - ${analysis.client_name || userId}`;
 
+      console.log('Notas para turno:', turnoNotes);
       const turno = await createTurno(
         analysis.client_name,
         userId,
