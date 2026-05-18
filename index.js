@@ -14,7 +14,7 @@ const twilioClient = twilio(
   process.env.TWILIO_AUTH_TOKEN
 );
 
-app.post('/webhook', async (req, res) => {
+app.post('/webhook/twilio', async (req, res) => {
   // Responde 200 de inmediato para evitar timeout de Twilio (15s)
   res.status(200).send('OK');
 
@@ -46,6 +46,53 @@ app.post('/webhook', async (req, res) => {
     console.log(`[${userId}] intent=${analysis.intent} stage=${analysis.stage}`);
   } catch (err) {
     console.error(`Error procesando mensaje de ${userId}:`, err.message);
+  }
+});
+
+// Meta WhatsApp Business API — verificación del webhook
+app.get('/webhook', (req, res) => {
+  if (req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
+    return res.status(200).send(req.query['hub.challenge']);
+  }
+  res.sendStatus(403);
+});
+
+// Meta WhatsApp Business API — recepción de mensajes
+app.post('/webhook', async (req, res) => {
+  res.sendStatus(200);
+
+  const entry = req.body?.entry?.[0];
+  const change = entry?.changes?.[0]?.value;
+  const message = change?.messages?.[0];
+
+  if (!message || message.type !== 'text') return;
+
+  const userId = message.from;
+  const body = message.text?.body;
+
+  if (!body) return;
+
+  try {
+    const { reply, notifySeller, sellerMessage, analysis } = await processMessage(userId, body);
+
+    await twilioClient.messages.create({
+      from: process.env.TWILIO_WHATSAPP_NUMBER,
+      to: `whatsapp:+${userId}`,
+      body: reply,
+    });
+
+    if (notifySeller && sellerMessage) {
+      await twilioClient.messages.create({
+        from: process.env.TWILIO_WHATSAPP_NUMBER,
+        to: `whatsapp:${process.env.SELLER_WHATSAPP}`,
+        body: sellerMessage,
+      });
+      console.log(`Notificación enviada a Martín — cliente: ${userId} | etapa: ${analysis.stage}`);
+    }
+
+    console.log(`[${userId}] intent=${analysis.intent} stage=${analysis.stage}`);
+  } catch (err) {
+    console.error(`Error procesando mensaje Meta de ${userId}:`, err.message);
   }
 });
 
