@@ -18,9 +18,7 @@ const HEADERS = {
 };
 
 function getArgentinaDate() {
-  const now = new Date();
-  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-  return new Date(utc - 3 * 3600000);
+  return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
 }
 
 function formatDate(date) {
