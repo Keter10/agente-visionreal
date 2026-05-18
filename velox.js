@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const SUPABASE_URL = 'https://zwpvpqnrhrvdspfdlwyn.supabase.co';
-const ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3cHZwcW5yaHJ2ZHNwZmRsd3luIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMjEzNTQsImV4cCI6MjA4ODU5NzM1NH0.4LJnkwAIB9KUhzfe5KN3p_ZZWQD0rUhJS679KP0kAEU';
+const ANON_KEY = process.env.VELOX_SUPABASE_KEY;
 const EMPLEADO_ID = '6536bc38-2add-4c97-a158-8c3d72e58e42';
 const NEGOCIO_ID = 'fb0b9b4f-97dd-4b91-ac2c-3fe68dc74d75';
 const SERVICIO_ID = '3a15d947-2a0f-4596-9701-5abc1a579f24';
@@ -115,12 +114,11 @@ export async function createTurno(clientName, clientPhone, slotFecha, slotHora) 
         local_id: LOCAL_ID,
         fecha: slotFecha,
         hora: slotHora,
-        cliente_nombre: clientName,
-        cliente_telefono: clientPhone,
         estado: 'pendiente',
         monto_sena: 0,
         monto_total: 0,
         origen: 'whatsapp',
+        notas: `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
       },
       { headers: { ...HEADERS, Prefer: 'return=representation' } }
     );
