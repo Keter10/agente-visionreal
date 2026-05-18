@@ -56,10 +56,12 @@ async function getOccupiedHours(fecha) {
       { headers: HEADERS }
     ),
     axios.get(
-      `${base}/bloqueos?empleado_id=eq.${EMPLEADO_ID}&fecha=eq.${fecha}&select=hora`,
+      `${base}/bloqueos?empleado_id=eq.${EMPLEADO_ID}&fecha=eq.${fecha}&select=*`,
       { headers: HEADERS }
     ),
   ]);
+
+  console.log(`Bloqueos para ${fecha}:`, JSON.stringify(bloqueosRes.data));
 
   const occupied = new Set();
   for (const t of turnosRes.data) {
@@ -121,11 +123,16 @@ export async function createTurno(clientName, clientPhone, slotFecha, slotHora, 
       console.log(`Cliente existente en Velox: ${clienteId}`);
       // Actualizar observaciones con la info nueva de esta conversación
       if (observaciones) {
-        await axios.patch(
-          `${base}/usuarios?id=eq.${clienteId}`,
-          { observaciones },
-          { headers: HEADERS }
-        );
+        const patchUrl = `${base}/usuarios?id=eq.${clienteId}`;
+        console.log('PATCH cliente URL:', patchUrl);
+        console.log('PATCH cliente body:', JSON.stringify({ observaciones }));
+        try {
+          const patchRes = await axios.patch(patchUrl, { observaciones }, { headers: HEADERS });
+          console.log('PATCH cliente status:', patchRes.status, '| data:', JSON.stringify(patchRes.data));
+        } catch (patchErr) {
+          console.error('PATCH cliente error:', patchErr.message);
+          console.error('PATCH cliente error detail:', JSON.stringify(patchErr.response?.data));
+        }
       }
     } else {
       // Step 2: crear cliente con observaciones
