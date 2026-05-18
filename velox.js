@@ -54,8 +54,10 @@ async function getSchedule() {
   );
   const local = res.data[0];
   if (!local) throw new Error('No se encontró configuración en tabla locales');
+  const diasRaw = local.dias_atencion;
+  const diasArray = typeof diasRaw === 'string' ? JSON.parse(diasRaw) : (diasRaw || []);
   const activeDays = new Set(
-    (local.dias_atencion || []).map((d) => DAY_MAP[d]).filter((n) => n !== undefined)
+    diasArray.map((d) => DAY_MAP[d]).filter((n) => n !== undefined)
   );
   const workStart = parseInt(local.horario_apertura?.slice(0, 2) ?? '9', 10);
   const workEnd = parseInt(local.horario_cierre?.slice(0, 2) ?? '18', 10);
