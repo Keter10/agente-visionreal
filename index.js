@@ -140,9 +140,9 @@ app.get('/oauth/callback', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 try {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`Agente Visión Real escuchando en puerto ${PORT}`);
   });
 } catch (err) {
