@@ -49,7 +49,7 @@ export const MODELS = [
     nombre: 'VR 30m²',
     tipo: 'Planta Baja',
     m2: 30,
-    ambientes: '2 ambientes',
+    ambientes: '1 dormitorio + baño + cocina-comedor',
     descripcion: 'Americana. Vivienda compacta con buena distribución.',
     precio_ars: 9_300_000,
     catalogo_pdf: `${BASE_URL}/catalogo-30m2.pdf`,
