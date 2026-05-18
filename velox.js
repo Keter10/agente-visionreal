@@ -117,8 +117,8 @@ export async function createTurno(clientName, clientPhone, slotFecha, slotHora) 
     notas: `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
   };
   const headers = { ...HEADERS, Prefer: 'return=representation' };
-  console.log('Creando turno en Velox:', JSON.stringify(body, null, 2));
-  console.log('Headers:', JSON.stringify(headers, null, 2));
+  console.log('Creando turno en Velox - URL:', `${SUPABASE_URL}/rest/v1/turnos`);
+  console.log('Creando turno en Velox - Body:', JSON.stringify(body, null, 2));
   try {
     const res = await axios.post(
       `${SUPABASE_URL}/rest/v1/turnos`,
