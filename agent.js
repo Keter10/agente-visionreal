@@ -269,11 +269,22 @@ export async function processMessage(userId, userMessage) {
     const storedSlots = getOfferedSlots(userId);
     const chosenSlot = storedSlots?.[analysis.confirmed_slot_index - 1];
     if (chosenSlot) {
+      const turnoNotes = [
+        analysis.model_chosen ? `Modelo: ${analysis.model_chosen}` : null,
+        analysis.zone ? `Zona: ${analysis.zone}` : null,
+        analysis.payment_type && analysis.payment_type !== 'desconocido' ? `Pago: ${analysis.payment_type}` : null,
+        analysis.budget_ars ? `Presupuesto: $${analysis.budget_ars.toLocaleString('es-AR')} ARS` : null,
+        analysis.monthly_payment_ars ? `Cuota: $${analysis.monthly_payment_ars.toLocaleString('es-AR')} ARS/mes` : null,
+        analysis.notes ? `Notas: ${analysis.notes}` : null,
+      ].filter(Boolean).join(' | ') || `Turno agendado por WhatsApp - ${analysis.client_name || userId}`;
+
       const turno = await createTurno(
         analysis.client_name,
         userId,
         chosenSlot.fecha,
-        chosenSlot.hora
+        chosenSlot.hora,
+        null,
+        turnoNotes
       );
       if (turno) {
         eventCreated = true;

@@ -102,29 +102,58 @@ export async function getAvailableSlots() {
   }
 }
 
-export async function createTurno(clientName, clientPhone, slotFecha, slotHora) {
-  const body = {
-    negocio_id: NEGOCIO_ID,
-    empleado_id: EMPLEADO_ID,
-    servicio_id: SERVICIO_ID,
-    local_id: LOCAL_ID,
-    fecha: slotFecha,
-    hora: slotHora,
-    estado: 'pendiente',
-    monto_sena: 0,
-    monto_total: 0,
-    notas: `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
-  };
-  const headers = { ...HEADERS, Prefer: 'return=representation' };
-  console.log('Creando turno en Velox - URL:', `${SUPABASE_URL}/rest/v1/turnos`);
-  console.log('Creando turno en Velox - Body:', JSON.stringify(body, null, 2));
+export async function createTurno(clientName, clientPhone, slotFecha, slotHora, email = null, notes = '') {
   try {
-    const res = await axios.post(
-      `${SUPABASE_URL}/rest/v1/turnos`,
-      body,
-      { headers }
+    const base = `${SUPABASE_URL}/rest/v1`;
+    const postHeaders = { ...HEADERS, Prefer: 'return=representation' };
+
+    // Step 1: buscar cliente existente
+    const busqueda = await axios.get(
+      `${base}/usuarios?negocio_id=eq.${NEGOCIO_ID}&telefono=eq.${clientPhone}&rol=eq.cliente&select=id`,
+      { headers: HEADERS }
     );
-    return res.data;
+
+    let clienteId;
+    if (busqueda.data.length > 0) {
+      clienteId = busqueda.data[0].id;
+      console.log(`Cliente existente en Velox: ${clienteId}`);
+    } else {
+      // Step 2: crear cliente
+      const clienteRes = await axios.post(
+        `${base}/usuarios`,
+        {
+          negocio_id: NEGOCIO_ID,
+          nombre: clientName || 'Cliente WhatsApp',
+          email: email || `sin-email-${clientPhone}@velox.app`,
+          rol: 'cliente',
+          telefono: clientPhone,
+          activo: true,
+          mostrar_como_prof: false,
+        },
+        { headers: postHeaders }
+      );
+      clienteId = clienteRes.data[0]?.id ?? clienteRes.data?.id;
+      console.log(`Cliente creado en Velox: ${clienteId}`);
+    }
+
+    // Step 3: crear turno linkeado al cliente
+    const body = {
+      negocio_id: NEGOCIO_ID,
+      empleado_id: EMPLEADO_ID,
+      servicio_id: SERVICIO_ID,
+      local_id: LOCAL_ID,
+      fecha: slotFecha,
+      hora: slotHora,
+      estado: 'pendiente',
+      monto_sena: 0,
+      monto_total: 0,
+      cliente_id: clienteId,
+      notas: notes || `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
+    };
+    console.log('Creando turno en Velox - URL:', `${base}/turnos`);
+    console.log('Creando turno en Velox - Body:', JSON.stringify(body, null, 2));
+    const turnoRes = await axios.post(`${base}/turnos`, body, { headers: postHeaders });
+    return turnoRes.data;
   } catch (err) {
     console.error('Error creando turno en Velox:', err.message);
     console.error('Supabase error detail:', JSON.stringify(err.response?.data, null, 2));
