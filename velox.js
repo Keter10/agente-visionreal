@@ -103,23 +103,27 @@ export async function getAvailableSlots() {
 }
 
 export async function createTurno(clientName, clientPhone, slotFecha, slotHora) {
+  const body = {
+    negocio_id: NEGOCIO_ID,
+    empleado_id: EMPLEADO_ID,
+    servicio_id: SERVICIO_ID,
+    local_id: LOCAL_ID,
+    fecha: slotFecha,
+    hora: slotHora,
+    estado: 'pendiente',
+    monto_sena: 0,
+    monto_total: 0,
+    origen: 'whatsapp',
+    notas: `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
+  };
+  const headers = { ...HEADERS, Prefer: 'return=representation' };
+  console.log('Creando turno en Velox:', JSON.stringify(body, null, 2));
+  console.log('Headers:', JSON.stringify(headers, null, 2));
   try {
     const res = await axios.post(
       `${SUPABASE_URL}/rest/v1/turnos`,
-      {
-        negocio_id: NEGOCIO_ID,
-        empleado_id: EMPLEADO_ID,
-        servicio_id: SERVICIO_ID,
-        local_id: LOCAL_ID,
-        fecha: slotFecha,
-        hora: slotHora,
-        estado: 'pendiente',
-        monto_sena: 0,
-        monto_total: 0,
-        origen: 'whatsapp',
-        notas: `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
-      },
-      { headers: { ...HEADERS, Prefer: 'return=representation' } }
+      body,
+      { headers }
     );
     return res.data;
   } catch (err) {
