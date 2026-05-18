@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const SUPABASE_URL = 'https://zwpvpqnrhrvdspfdlwyn.supabase.co';
 const ANON_KEY = process.env.VELOX_SUPABASE_KEY;
+console.log('VELOX_SUPABASE_KEY:', ANON_KEY ? ANON_KEY.slice(0, 20) + '...' : 'NO DEFINIDA');
 const EMPLEADO_ID = '6536bc38-2add-4c97-a158-8c3d72e58e42';
 const NEGOCIO_ID = 'fb0b9b4f-97dd-4b91-ac2c-3fe68dc74d75';
 const SERVICIO_ID = '3a15d947-2a0f-4596-9701-5abc1a579f24';
