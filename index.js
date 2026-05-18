@@ -5,6 +5,16 @@ import axios from 'axios';
 import { processMessage } from './agent.js';
 import { getAuthUrl, saveTokensFromCode, isCalendarReady } from './calendar.js';
 
+process.on('uncaughtException', (err) => {
+  console.error('CRASH — uncaughtException:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('CRASH — unhandledRejection:', reason);
+  process.exit(1);
+});
+
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -131,6 +141,11 @@ app.get('/oauth/callback', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Agente Visión Real escuchando en puerto ${PORT}`);
-});
+try {
+  app.listen(PORT, () => {
+    console.log(`Agente Visión Real escuchando en puerto ${PORT}`);
+  });
+} catch (err) {
+  console.error('CRASH — error al iniciar servidor:', err);
+  process.exit(1);
+}
