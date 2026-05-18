@@ -10,7 +10,7 @@ export const COMPANY = {
     'NO ofrecemos terrenos ni servicio llave en mano. Solo construcción: el cliente debe tener su propio terreno.',
 };
 
-const BASE_URL = 'https://agente-visionreal-production.up.railway.app/catalogos';
+const BASE_URL = 'https://agente-visionreal.onrender.com/catalogos';
 
 export const MODELS = [
   // ── PLANTA BAJA ($310.000/m²) ──────────────────────────────────────────

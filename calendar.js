@@ -20,6 +20,13 @@ function createOAuthClient() {
 }
 
 function loadTokens() {
+  if (process.env.GOOGLE_TOKENS) {
+    try {
+      return JSON.parse(process.env.GOOGLE_TOKENS);
+    } catch {
+      return null;
+    }
+  }
   try {
     return JSON.parse(fs.readFileSync(TOKENS_PATH, 'utf8'));
   } catch {
@@ -28,7 +35,13 @@ function loadTokens() {
 }
 
 function saveTokens(tokens) {
-  fs.writeFileSync(TOKENS_PATH, JSON.stringify(tokens, null, 2));
+  console.log('GOOGLE_TOKENS — copiá esto como variable de entorno en Render:');
+  console.log(JSON.stringify(tokens));
+  try {
+    fs.writeFileSync(TOKENS_PATH, JSON.stringify(tokens, null, 2));
+  } catch {
+    // Filesystem de solo lectura (producción): ignorar
+  }
 }
 
 export function getAuthUrl() {

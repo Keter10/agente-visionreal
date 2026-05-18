@@ -37,12 +37,22 @@ function updateHistory(userId, messages) {
     messages: trimmed,
     lastActivity: Date.now(),
     offeredSlots: current?.offeredSlots ?? null,
+    sellerNotified: current?.sellerNotified ?? false,
   });
 }
 
 function setOfferedSlots(userId, slots) {
   const entry = conversations.get(userId);
   if (entry) entry.offeredSlots = slots;
+}
+
+function isSellerNotified(userId) {
+  return getEntry(userId)?.sellerNotified ?? false;
+}
+
+function setSellerNotified(userId) {
+  const entry = conversations.get(userId);
+  if (entry) entry.sellerNotified = true;
 }
 
 function formatSlotsBlock(slots) {
@@ -162,6 +172,18 @@ Reglas:
   }
 }
 
+function formatFinancingForSeller(rawText) {
+  if (!rawText) return null;
+  const result = [];
+  for (const line of rawText.split('\n')) {
+    if (!line.includes('|')) continue;
+    if (/^[\s|:-]+$/.test(line)) continue; // línea separadora tipo |---|---|
+    const cells = line.split('|').map((c) => c.trim()).filter(Boolean);
+    if (cells.length >= 2) result.push(`📅 ${cells.join(': ')}`);
+  }
+  return result.length > 0 ? result.join('\n') : null;
+}
+
 function buildSellerNotification(userId, userMessage, analysis) {
   const lines = ['🔥 *CLIENTE LISTO PARA REUNIÓN CON MARTÍN*', ''];
 
@@ -182,6 +204,15 @@ function buildSellerNotification(userId, userMessage, analysis) {
 
   if (analysis.monthly_payment_ars) {
     lines.push(`📅 *Cuota posible:* $${analysis.monthly_payment_ars.toLocaleString('es-AR')} ARS/mes`);
+  }
+
+  if (analysis.payment_type === 'financiacion') {
+    const formatted = formatFinancingForSeller(getFinancingPlans());
+    if (formatted) {
+      lines.push('');
+      lines.push('💳 *Planes de financiación disponibles:*');
+      lines.push(formatted);
+    }
   }
 
   if (analysis.zone) lines.push(`📍 *Zona del terreno:* ${analysis.zone}`);
@@ -253,7 +284,12 @@ export async function processMessage(userId, userMessage) {
     }
   }
 
-  const notifySeller = analysis.intent === 'ALTA';
+  const notifySeller =
+    (analysis.stage === 'cierre' || analysis.stage === 'agenda') &&
+    !isSellerNotified(userId);
+
+  if (notifySeller) setSellerNotified(userId);
+
   const sellerMessage = notifySeller
     ? buildSellerNotification(userId, userMessage, analysis)
     : null;
