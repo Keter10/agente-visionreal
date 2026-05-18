@@ -113,12 +113,22 @@ export async function createTurno(clientName, clientPhone, slotFecha, slotHora, 
       { headers: HEADERS }
     );
 
+    const observaciones = (notes && notes.trim()) ? notes.trim() : null;
+
     let clienteId;
     if (busqueda.data.length > 0) {
       clienteId = busqueda.data[0].id;
       console.log(`Cliente existente en Velox: ${clienteId}`);
+      // Actualizar observaciones con la info nueva de esta conversación
+      if (observaciones) {
+        await axios.patch(
+          `${base}/usuarios?id=eq.${clienteId}`,
+          { observaciones },
+          { headers: HEADERS }
+        );
+      }
     } else {
-      // Step 2: crear cliente
+      // Step 2: crear cliente con observaciones
       const clienteRes = await axios.post(
         `${base}/usuarios`,
         {
@@ -129,6 +139,7 @@ export async function createTurno(clientName, clientPhone, slotFecha, slotHora, 
           telefono: clientPhone,
           activo: true,
           mostrar_como_prof: false,
+          ...(observaciones && { observaciones }),
         },
         { headers: postHeaders }
       );
