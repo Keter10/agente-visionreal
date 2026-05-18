@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT } from './knowledge.js';
 import { getFinancingPlans } from './financing.js';
-import { getAvailableSlots, createEvent, isCalendarReady } from './calendar.js';
+import { getAvailableSlots, createTurno, isVeloxReady } from './velox.js';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -251,7 +251,7 @@ export async function processMessage(userId, userMessage) {
   if (analysis.confirmed_slot_index) {
     // Client is picking from a list already shown — reuse stored slots
     availableSlots = getOfferedSlots(userId);
-  } else if (needsSlots && isCalendarReady()) {
+  } else if (needsSlots && isVeloxReady()) {
     availableSlots = await getAvailableSlots();
   }
 
@@ -263,23 +263,22 @@ export async function processMessage(userId, userMessage) {
     setOfferedSlots(userId, availableSlots);
   }
 
-  // Step 5: if client confirmed a slot, create the Calendar event
+  // Step 5: if client confirmed a slot, create the turno in Velox
   let eventCreated = false;
   if (analysis.confirmed_slot_index) {
     const storedSlots = getOfferedSlots(userId);
     const chosenSlot = storedSlots?.[analysis.confirmed_slot_index - 1];
     if (chosenSlot) {
-      const event = await createEvent(
+      const turno = await createTurno(
         analysis.client_name,
         userId,
-        analysis.model_chosen,
-        chosenSlot.start,
-        analysis.zone
+        chosenSlot.fecha,
+        chosenSlot.hora
       );
-      if (event) {
+      if (turno) {
         eventCreated = true;
         setOfferedSlots(userId, null);
-        console.log(`Evento Calendar creado — cliente: ${userId} | slot: ${chosenSlot.label}`);
+        console.log(`Turno Velox creado — cliente: ${userId} | slot: ${chosenSlot.label}`);
       }
     }
   }

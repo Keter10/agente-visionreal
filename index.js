@@ -3,7 +3,6 @@ import express from 'express';
 import twilio from 'twilio';
 import axios from 'axios';
 import { processMessage } from './agent.js';
-import { getAuthUrl, saveTokensFromCode, isCalendarReady } from './calendar.js';
 
 process.on('uncaughtException', (err) => {
   console.error('CRASH — uncaughtException:', err);
@@ -116,28 +115,8 @@ app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
     service: 'Visión Real WhatsApp Agent',
-    calendar: isCalendarReady() ? 'autorizado' : 'no autorizado',
+    scheduling: 'velox',
   });
-});
-
-app.get('/auth/google', (_req, res) => {
-  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-    return res.status(500).send('Variables GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET no configuradas.');
-  }
-  res.redirect(getAuthUrl());
-});
-
-app.get('/oauth/callback', async (req, res) => {
-  const { code } = req.query;
-  if (!code) return res.status(400).send('Falta el código de autorización.');
-  try {
-    await saveTokensFromCode(code);
-    res.send('✅ Google Calendar autorizado correctamente. Ya podés cerrar esta ventana.');
-    console.log('Google Calendar autorizado y tokens guardados.');
-  } catch (err) {
-    console.error('Error en OAuth callback:', err.message);
-    res.status(500).send('Error al autorizar Google Calendar: ' + err.message);
-  }
 });
 
 const PORT = process.env.PORT || 8080;
