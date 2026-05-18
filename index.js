@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import twilio from 'twilio';
+import axios from 'axios';
 import { processMessage } from './agent.js';
 import { getAuthUrl, saveTokensFromCode, isCalendarReady } from './calendar.js';
 
@@ -13,6 +14,19 @@ const twilioClient = twilio(
   process.env.TWILIO_ACCOUNT_SID,
   process.env.TWILIO_AUTH_TOKEN
 );
+
+async function sendMetaMessage(to, text) {
+  await axios.post(
+    `https://graph.facebook.com/v20.0/${process.env.META_PHONE_NUMBER_ID}/messages`,
+    {
+      messaging_product: 'whatsapp',
+      to,
+      type: 'text',
+      text: { body: text },
+    },
+    { headers: { Authorization: `Bearer ${process.env.META_ACCESS_TOKEN}` } }
+  );
+}
 
 app.post('/webhook/twilio', async (req, res) => {
   // Responde 200 de inmediato para evitar timeout de Twilio (15s)
@@ -75,18 +89,10 @@ app.post('/webhook', async (req, res) => {
   try {
     const { reply, notifySeller, sellerMessage, analysis } = await processMessage(userId, body);
 
-    await twilioClient.messages.create({
-      from: process.env.TWILIO_WHATSAPP_NUMBER,
-      to: `whatsapp:+${userId}`,
-      body: reply,
-    });
+    await sendMetaMessage(userId, reply);
 
     if (notifySeller && sellerMessage) {
-      await twilioClient.messages.create({
-        from: process.env.TWILIO_WHATSAPP_NUMBER,
-        to: `whatsapp:${process.env.SELLER_WHATSAPP}`,
-        body: sellerMessage,
-      });
+      await sendMetaMessage(process.env.SELLER_WHATSAPP.replace('+', ''), sellerMessage);
       console.log(`Notificación enviada a Martín — cliente: ${userId} | etapa: ${analysis.stage}`);
     }
 
