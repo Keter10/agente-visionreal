@@ -128,6 +128,7 @@ export async function createTurno(clientName, clientPhone, slotFecha, slotHora) 
     return res.data;
   } catch (err) {
     console.error('Error creando turno en Velox:', err.message);
+    console.error('Supabase error detail:', JSON.stringify(err.response?.data, null, 2));
     return null;
   }
 }
