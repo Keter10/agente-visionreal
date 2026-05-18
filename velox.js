@@ -113,7 +113,6 @@ export async function createTurno(clientName, clientPhone, slotFecha, slotHora) 
     estado: 'pendiente',
     monto_sena: 0,
     monto_total: 0,
-    origen: 'whatsapp',
     notas: `Turno agendado por WhatsApp - ${clientName} - ${clientPhone}`,
   };
   const headers = { ...HEADERS, Prefer: 'return=representation' };
