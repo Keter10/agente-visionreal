@@ -56,7 +56,22 @@ async function getSchedule() {
   const local = res.data[0];
   if (!local) throw new Error('No se encontró configuración en tabla locales');
   const diasRaw = local.dias_atencion;
-  const diasArray = typeof diasRaw === 'string' ? JSON.parse(diasRaw) : (diasRaw || []);
+  console.log('dias_atencion tipo:', typeof diasRaw, '| valor:', JSON.stringify(diasRaw));
+
+  let diasArray;
+  if (Array.isArray(diasRaw)) {
+    diasArray = diasRaw;
+  } else if (typeof diasRaw === 'string') {
+    try {
+      diasArray = JSON.parse(diasRaw);
+    } catch {
+      diasArray = diasRaw.split(',').map(d => d.trim());
+    }
+  } else {
+    diasArray = [];
+  }
+
+  console.log('diasArray resultado:', diasArray, '| isArray:', Array.isArray(diasArray));
   const activeDays = new Set(
     diasArray.map((d) => DAY_MAP[d]).filter((n) => n !== undefined)
   );
