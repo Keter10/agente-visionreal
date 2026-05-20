@@ -134,7 +134,7 @@ Reglas:
 - intent BAJA: consulta general o informativa
 - intent NINGUNA: queja, off-topic, sin terreno propio, o sin intención real de compra
 - wants_meeting: true si el cliente quiere reunirse, hablar con Martín, agendar o confirmar una fecha/hora
-- confirmed_slot_index: número entero (1-6) SOLO si el cliente eligió una de las opciones de horario ya ofrecidas en el historial ("la opción 2", "el martes", "ese horario", etc.), sino null
+- confirmed_slot_index: número entero (1-6) si el cliente eligió explícitamente una de las opciones numeradas ('la 1', 'opción 2', 'el martes', 'a las 10', 'ese horario', 'el primero', 'el segundo', etc.). Si el cliente menciona un día o hora que coincide con alguna opción ofrecida, inferí el índice. Si no eligió ninguna opción concreta, null.
 - budget_ars: número en pesos si lo mencionaron, sino null
 - monthly_payment_ars: número en pesos si mencionaron cuota mensual, sino null
 - model_chosen: nombre exacto del modelo si lo eligieron (ej: "VR 47m²"), sino null
