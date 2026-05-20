@@ -242,6 +242,7 @@ export async function processMessage(userId, userMessage) {
 
   // Step 1: fast analysis with Haiku (determines intent and whether scheduling is needed)
   const analysis = await analyzeConversation(userMessage, historySummary);
+  console.log('Analysis result:', JSON.stringify(analysis));
 
   // Step 2: resolve slots — either use stored ones (client confirming) or fetch fresh ones
   let availableSlots = null;
