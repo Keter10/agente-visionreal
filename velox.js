@@ -52,6 +52,7 @@ async function getSchedule() {
     `${SUPABASE_URL}/rest/v1/locales?negocio_id=eq.${NEGOCIO_ID}&select=dias_atencion,horario_apertura,horario_cierre`,
     { headers: HEADERS }
   );
+  console.log('Locales raw:', JSON.stringify(res.data));
   const local = res.data[0];
   if (!local) throw new Error('No se encontró configuración en tabla locales');
   const diasRaw = local.dias_atencion;
@@ -61,7 +62,8 @@ async function getSchedule() {
   );
   const workStart = parseInt(local.horario_apertura?.slice(0, 2) ?? '9', 10);
   const workEnd = parseInt(local.horario_cierre?.slice(0, 2) ?? '18', 10);
-  console.log(`Horario Velox: días=${[...activeDays]} apertura=${workStart}hs cierre=${workEnd}hs`);
+  console.log('Días activos:', [...activeDays]);
+  console.log('Horario:', workStart, '-', workEnd);
   return { activeDays, workStart, workEnd };
 }
 
@@ -116,9 +118,12 @@ export async function getAvailableSlots() {
       if (slots.length >= 6) break;
     }
 
+    console.log('Slots generados:', slots.length);
+    if (slots.length === 0) console.log('Sin slots disponibles: todos los horarios ocupados o bloqueados en los próximos 14 días');
     return slots.length > 0 ? slots : null;
   } catch (err) {
     console.error('Error obteniendo slots de Velox:', err.message);
+    console.error('Stack:', err.stack);
     return null;
   }
 }
