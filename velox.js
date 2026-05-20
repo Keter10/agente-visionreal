@@ -120,22 +120,29 @@ export async function getAvailableSlots() {
     const slots = [];
 
     for (const day of days) {
+      if (slots.length >= 6) break;
       const fechaStr = formatDate(day);
       const occupied = await getOccupiedHours(fechaStr);
 
-      for (let h = workStart; h < workEnd; h++) {
+      const morningHours = [10, 11, 12].filter(h => h >= workStart && h < workEnd);
+      const afternoonHours = [14, 15, 16, 17].filter(h => h >= workStart && h < workEnd);
+      let slotsThisDay = 0;
+
+      for (const h of morningHours) {
+        if (slotsThisDay >= 1) break;
         const horaStr = `${String(h).padStart(2, '0')}:00`;
         if (occupied.has(horaStr)) continue;
-
-        slots.push({
-          fecha: fechaStr,
-          hora: horaStr,
-          label: formatLabel(day, h),
-        });
-
-        if (slots.length >= 6) break;
+        slots.push({ fecha: fechaStr, hora: horaStr, label: formatLabel(day, h) });
+        slotsThisDay++;
       }
-      if (slots.length >= 6) break;
+
+      for (const h of afternoonHours) {
+        if (slotsThisDay >= 2 || slots.length >= 6) break;
+        const horaStr = `${String(h).padStart(2, '0')}:00`;
+        if (occupied.has(horaStr)) continue;
+        slots.push({ fecha: fechaStr, hora: horaStr, label: formatLabel(day, h) });
+        slotsThisDay++;
+      }
     }
 
     console.log('Slots generados:', slots.length);
