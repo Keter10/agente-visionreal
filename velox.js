@@ -63,10 +63,15 @@ async function getSchedule() {
     diasArray = diasRaw;
   } else if (typeof diasRaw === 'string') {
     try {
-      diasArray = JSON.parse(diasRaw);
+      const parsed = JSON.parse(diasRaw);
+      diasArray = typeof parsed === 'object' && !Array.isArray(parsed)
+        ? Object.keys(parsed).filter(k => parsed[k] === true)
+        : parsed;
     } catch {
       diasArray = diasRaw.split(',').map(d => d.trim());
     }
+  } else if (typeof diasRaw === 'object' && diasRaw !== null && !Array.isArray(diasRaw)) {
+    diasArray = Object.keys(diasRaw).filter(k => diasRaw[k] === true);
   } else {
     diasArray = [];
   }
