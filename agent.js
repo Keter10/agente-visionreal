@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { SYSTEM_PROMPT } from './knowledge.js';
+import { getModels, getSystemPrompt } from './knowledge.js';
 import { getFinancingPlans } from './financing.js';
 import { getAvailableSlots, createTurno, isVeloxReady } from './velox.js';
 import { upsertLeadCRM } from './crm.js';
@@ -67,9 +67,10 @@ function formatSlotsBlock(slots) {
   return lines.join('\n');
 }
 
-function buildSystemBlocks(availableSlots = null) {
+async function buildSystemBlocks(availableSlots = null) {
+  const models = await getModels();
   const blocks = [
-    { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
+    { type: 'text', text: getSystemPrompt(models), cache_control: { type: 'ephemeral' } },
   ];
 
   const financingPlans = getFinancingPlans();
@@ -95,7 +96,7 @@ async function generateResponse(userId, userMessage, availableSlots = null) {
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 1024,
-    system: buildSystemBlocks(availableSlots),
+    system: await buildSystemBlocks(availableSlots),
     messages,
   });
 

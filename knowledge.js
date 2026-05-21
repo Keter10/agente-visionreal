@@ -1,3 +1,5 @@
+import { getCRMConfig } from './crm-config.js';
+
 export const COMPANY = {
   nombre: 'Visión Real Viviendas',
   whatsapp: '+5491160429235',
@@ -12,178 +14,64 @@ export const COMPANY = {
 
 const BASE_URL = 'https://agente-visionreal.onrender.com/catalogos';
 
-export const MODELS = [
-  // ── PLANTA BAJA ($310.000/m²) ──────────────────────────────────────────
-  {
-    id: 'vr-15',
-    nombre: 'VR 15m²',
-    tipo: 'Planta Baja',
-    m2: 15,
-    ambientes: '1 ambiente + baño',
-    descripcion: 'Ideal para estudio o vivienda unipersonal compacta.',
-    precio_ars: 4_650_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-15m2.pdf`,
-  },
-  {
-    id: 'vr-18',
-    nombre: 'VR 18m²',
-    tipo: 'Planta Baja',
-    m2: 18,
-    ambientes: '1 ambiente amplio + baño',
-    descripcion: 'Americana. Diseño optimizado para máximo aprovechamiento del espacio.',
-    precio_ars: 5_580_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-18m2.pdf`,
-  },
-  {
-    id: 'vr-21',
-    nombre: 'VR 21m²',
-    tipo: 'Planta Baja',
-    m2: 21,
-    ambientes: '1 dormitorio + estar + baño',
-    descripcion: 'Minimalista. Primera vivienda propia con ambientes bien diferenciados.',
-    precio_ars: 6_510_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-21m2.pdf`,
-  },
-  {
-    id: 'vr-30',
-    nombre: 'VR 30m²',
-    tipo: 'Planta Baja',
-    m2: 30,
-    ambientes: '1 dormitorio + baño + cocina-comedor',
-    descripcion: 'Americana. Vivienda compacta con buena distribución.',
-    precio_ars: 9_300_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-30m2.pdf`,
-  },
-  {
-    id: 'vr-33',
-    nombre: 'VR 33m²',
-    tipo: 'Planta Baja',
-    m2: 33,
-    ambientes: '2 ambientes + baño',
-    descripcion: 'Diseño eficiente para pareja o pequeña familia.',
-    precio_ars: 10_230_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-33m2.pdf`,
-  },
-  {
-    id: 'vr-36',
-    nombre: 'VR 36m²',
-    tipo: 'Planta Baja',
-    m2: 36,
-    ambientes: '2 ambientes + baño completo',
-    descripcion: 'Confort esencial con baño completo y cocina separada.',
-    precio_ars: 11_160_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-36m2.pdf`,
-  },
-  {
-    id: 'vr-47',
-    nombre: 'VR 47m²',
-    tipo: 'Planta Baja',
-    m2: 47,
-    ambientes: '2 dormitorios + baño + cocina-comedor',
-    descripcion: 'Ideal para familia pequeña con ambientes bien definidos.',
-    precio_ars: 14_570_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-47m2.pdf`,
-  },
-  {
-    id: 'vr-51',
-    nombre: 'VR 51m²',
-    tipo: 'Planta Baja',
-    m2: 51,
-    ambientes: '2 dormitorios + 2 baños + estar',
-    descripcion: 'Comodidad para toda la familia con doble baño.',
-    precio_ars: 15_810_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-51m2.pdf`,
-  },
-  {
-    id: 'vr-54',
-    nombre: 'VR 54m²',
-    tipo: 'Planta Baja',
-    m2: 54,
-    ambientes: '3 dormitorios + baño + cocina-comedor',
-    descripcion: 'Tres dormitorios ideales para familia con hijos.',
-    precio_ars: 16_740_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-54m2.pdf`,
-  },
-  {
-    id: 'vr-67',
-    nombre: 'VR 67m²',
-    tipo: 'Planta Baja',
-    m2: 67,
-    ambientes: '3 dormitorios + 2 baños + estar + lavadero',
-    descripcion: 'Amplitud y confort con todos los ambientes diferenciados.',
-    precio_ars: 20_770_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-67m2.pdf`,
-  },
-  {
-    id: 'vr-80',
-    nombre: 'VR 80m²',
-    tipo: 'Planta Baja',
-    m2: 80,
-    ambientes: '4 dormitorios + 2 baños',
-    descripcion: 'Americana. Cuatro dormitorios para familias numerosas.',
-    precio_ars: 24_800_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-80m2.pdf`,
-  },
-  {
-    id: 'vr-103',
-    nombre: 'VR 103m²',
-    tipo: 'Planta Baja',
-    m2: 103,
-    ambientes: '4 dormitorios + 3 baños + sala + comedor',
-    descripcion: 'Nuestra vivienda más amplia, con todos los ambientes diferenciados.',
-    precio_ars: 31_930_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-103m2.pdf`,
-  },
-  // ── DOS PLANTAS ($380.000/m²) ───────────────────────────────────────────
-  {
-    id: 'vr-duplex-30',
-    nombre: 'VR Dúplex 30m²',
-    tipo: 'Dos Plantas',
-    m2: 30,
-    ambientes: '2 dormitorios + baño + estar',
-    descripcion: 'Dos plantas. Máximo aprovechamiento vertical del terreno.',
-    precio_ars: 11_400_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-duplex-30m2.pdf`,
-  },
-  {
-    id: 'vr-duplex-40',
-    nombre: 'VR Dúplex 40m²',
-    tipo: 'Dos Plantas',
-    m2: 40,
-    ambientes: '2 dormitorios + 2 baños + estar',
-    descripcion: 'Dos plantas. Diseño moderno con doble altura.',
-    precio_ars: 15_200_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-40m2-duplex.pdf`,
-  },
-  // ── CABAÑAS Y QUINCHOS ($380.000/m²) ───────────────────────────────────
-  {
-    id: 'vr-cabana-25',
-    nombre: 'VR Cabaña 25m²',
-    tipo: 'Cabaña',
-    m2: 25,
-    ambientes: '1 dormitorio + baño + estar-comedor',
-    descripcion: 'Cabaña Wood Frame ideal para turismo, campo o uso recreativo.',
-    precio_ars: 9_500_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-25m2-cabana.pdf`,
-  },
-  {
-    id: 'vr-quincho-40',
-    nombre: 'VR Quincho 40m²',
-    tipo: 'Quincho',
-    m2: 40,
-    ambientes: 'Salón + parrilla + baño',
-    descripcion: 'Quincho de madera para entretener. Ideal como complemento de la vivienda principal.',
-    precio_ars: 15_200_000,
-    catalogo_pdf: `${BASE_URL}/catalogo-quincho-40m2.pdf`,
-  },
+const FALLBACK_PRICES = {
+  pb: 310_000,
+  duplex: 380_000,
+  cabana: 380_000,
+};
+
+const BASE_MODELS = [
+  // ── PLANTA BAJA ───────────────────────────────────────────────────────────
+  { id: 'vr-15',  nombre: 'VR 15m²',  tipo: 'Planta Baja', m2: 15,  ambientes: '1 ambiente + baño',                       descripcion: 'Ideal para estudio o vivienda unipersonal compacta.',                           catalogo_pdf: `${BASE_URL}/catalogo-15m2.pdf` },
+  { id: 'vr-18',  nombre: 'VR 18m²',  tipo: 'Planta Baja', m2: 18,  ambientes: '1 ambiente amplio + baño',                descripcion: 'Americana. Diseño optimizado para máximo aprovechamiento del espacio.',          catalogo_pdf: `${BASE_URL}/catalogo-18m2.pdf` },
+  { id: 'vr-21',  nombre: 'VR 21m²',  tipo: 'Planta Baja', m2: 21,  ambientes: '1 dormitorio + estar + baño',             descripcion: 'Minimalista. Primera vivienda propia con ambientes bien diferenciados.',          catalogo_pdf: `${BASE_URL}/catalogo-21m2.pdf` },
+  { id: 'vr-30',  nombre: 'VR 30m²',  tipo: 'Planta Baja', m2: 30,  ambientes: '1 dormitorio + baño + cocina-comedor',    descripcion: 'Americana. Vivienda compacta con buena distribución.',                           catalogo_pdf: `${BASE_URL}/catalogo-30m2.pdf` },
+  { id: 'vr-33',  nombre: 'VR 33m²',  tipo: 'Planta Baja', m2: 33,  ambientes: '2 ambientes + baño',                      descripcion: 'Diseño eficiente para pareja o pequeña familia.',                                 catalogo_pdf: `${BASE_URL}/catalogo-33m2.pdf` },
+  { id: 'vr-36',  nombre: 'VR 36m²',  tipo: 'Planta Baja', m2: 36,  ambientes: '2 ambientes + baño completo',             descripcion: 'Confort esencial con baño completo y cocina separada.',                          catalogo_pdf: `${BASE_URL}/catalogo-36m2.pdf` },
+  { id: 'vr-47',  nombre: 'VR 47m²',  tipo: 'Planta Baja', m2: 47,  ambientes: '2 dormitorios + baño + cocina-comedor',   descripcion: 'Ideal para familia pequeña con ambientes bien definidos.',                        catalogo_pdf: `${BASE_URL}/catalogo-47m2.pdf` },
+  { id: 'vr-51',  nombre: 'VR 51m²',  tipo: 'Planta Baja', m2: 51,  ambientes: '2 dormitorios + 2 baños + estar',         descripcion: 'Comodidad para toda la familia con doble baño.',                                 catalogo_pdf: `${BASE_URL}/catalogo-51m2.pdf` },
+  { id: 'vr-54',  nombre: 'VR 54m²',  tipo: 'Planta Baja', m2: 54,  ambientes: '3 dormitorios + baño + cocina-comedor',   descripcion: 'Tres dormitorios ideales para familia con hijos.',                               catalogo_pdf: `${BASE_URL}/catalogo-54m2.pdf` },
+  { id: 'vr-67',  nombre: 'VR 67m²',  tipo: 'Planta Baja', m2: 67,  ambientes: '3 dormitorios + 2 baños + estar + lavadero', descripcion: 'Amplitud y confort con todos los ambientes diferenciados.',                 catalogo_pdf: `${BASE_URL}/catalogo-67m2.pdf` },
+  { id: 'vr-80',  nombre: 'VR 80m²',  tipo: 'Planta Baja', m2: 80,  ambientes: '4 dormitorios + 2 baños',                 descripcion: 'Americana. Cuatro dormitorios para familias numerosas.',                         catalogo_pdf: `${BASE_URL}/catalogo-80m2.pdf` },
+  { id: 'vr-103', nombre: 'VR 103m²', tipo: 'Planta Baja', m2: 103, ambientes: '4 dormitorios + 3 baños + sala + comedor', descripcion: 'Nuestra vivienda más amplia, con todos los ambientes diferenciados.',          catalogo_pdf: `${BASE_URL}/catalogo-103m2.pdf` },
+  // ── DOS PLANTAS ───────────────────────────────────────────────────────────
+  { id: 'vr-duplex-30', nombre: 'VR Dúplex 30m²', tipo: 'Dos Plantas', m2: 30, ambientes: '2 dormitorios + baño + estar',       descripcion: 'Dos plantas. Máximo aprovechamiento vertical del terreno.', catalogo_pdf: `${BASE_URL}/catalogo-duplex-30m2.pdf` },
+  { id: 'vr-duplex-40', nombre: 'VR Dúplex 40m²', tipo: 'Dos Plantas', m2: 40, ambientes: '2 dormitorios + 2 baños + estar',    descripcion: 'Dos plantas. Diseño moderno con doble altura.',            catalogo_pdf: `${BASE_URL}/catalogo-40m2-duplex.pdf` },
+  // ── CABAÑAS Y QUINCHOS ────────────────────────────────────────────────────
+  { id: 'vr-cabana-25',  nombre: 'VR Cabaña 25m²',  tipo: 'Cabaña',  m2: 25, ambientes: '1 dormitorio + baño + estar-comedor', descripcion: 'Cabaña Wood Frame ideal para turismo, campo o uso recreativo.',                               catalogo_pdf: `${BASE_URL}/catalogo-25m2-cabana.pdf` },
+  { id: 'vr-quincho-40', nombre: 'VR Quincho 40m²', tipo: 'Quincho', m2: 40, ambientes: 'Salón + parrilla + baño',              descripcion: 'Quincho de madera para entretener. Ideal como complemento de la vivienda principal.', catalogo_pdf: `${BASE_URL}/catalogo-quincho-40m2.pdf` },
 ];
 
-const modelsReference = MODELS.map(
-  (m) =>
-    `• ${m.nombre} (${m.tipo}) | ${m.m2}m² | ${m.ambientes} | $${m.precio_ars.toLocaleString('es-AR')} ARS${m.catalogo_pdf ? `\n  Catálogo PDF: ${m.catalogo_pdf}` : ''}`
-).join('\n');
+export async function getModels() {
+  let config = null;
+  try {
+    config = await getCRMConfig();
+  } catch {
+    // fallback silencioso
+  }
 
-export const SYSTEM_PROMPT = `Sos Sol, asesora comercial de alto rendimiento de Visión Real Viviendas. Tu objetivo no es informar: es VENDER. Sos empática, inteligente y orientada al cierre. Trabajás en equipo con Martín (director comercial), a quien derivás cuando el cliente está listo para avanzar.
+  const pricePB     = config?.calc_precio_pb     || FALLBACK_PRICES.pb;
+  const priceDuplex = config?.calc_precio_duplex  || FALLBACK_PRICES.duplex;
+  const priceCabana = config?.calc_precio_cabana  || FALLBACK_PRICES.cabana;
+
+  return BASE_MODELS.map((m) => {
+    let pricePerM2;
+    if (m.tipo === 'Planta Baja') pricePerM2 = pricePB;
+    else if (m.tipo === 'Dos Plantas') pricePerM2 = priceDuplex;
+    else pricePerM2 = priceCabana; // Cabaña, Quincho
+    return { ...m, precio_ars: m.m2 * pricePerM2 };
+  });
+}
+
+export function getSystemPrompt(models) {
+  const modelsReference = models
+    .map(
+      (m) =>
+        `• ${m.nombre} (${m.tipo}) | ${m.m2}m² | ${m.ambientes} | $${m.precio_ars.toLocaleString('es-AR')} ARS${m.catalogo_pdf ? `\n  Catálogo PDF: ${m.catalogo_pdf}` : ''}`
+    )
+    .join('\n');
+
+  return `Sos Sol, asesora comercial de alto rendimiento de Visión Real Viviendas. Tu objetivo no es informar: es VENDER. Sos empática, inteligente y orientada al cierre. Trabajás en equipo con Martín (director comercial), a quien derivás cuando el cliente está listo para avanzar.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 FILOSOFÍA DE VENTA
@@ -367,3 +255,4 @@ REGLAS DE COMUNICACIÓN
 • Personalizá usando el nombre del cliente cuando lo sepas.
 • Nunca respondas preguntas con paredes de texto. Si hay mucho info, preguntá primero por dónde empezar.
 • PROHIBIDO usar tablas markdown (| columna | columna |) en cualquier parte del mensaje. WhatsApp no las renderiza y se ven como texto feo. Usá siempre listas con emojis, asteriscos para negrita y saltos de línea.`;
+}
