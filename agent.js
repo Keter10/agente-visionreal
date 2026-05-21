@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT } from './knowledge.js';
 import { getFinancingPlans } from './financing.js';
 import { getAvailableSlots, createTurno, isVeloxReady } from './velox.js';
+import { upsertLeadCRM } from './crm.js';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -243,6 +244,19 @@ export async function processMessage(userId, userMessage) {
   // Step 1: fast analysis with Haiku (determines intent and whether scheduling is needed)
   const analysis = await analyzeConversation(userMessage, historySummary);
   console.log('Analysis result:', JSON.stringify(analysis));
+
+  // Step 1b: cargar lead al CRM si hay intención de compra
+  if (analysis.intent === 'ALTA' || analysis.intent === 'MEDIA') {
+    await upsertLeadCRM({
+      nombre: analysis.client_name,
+      telefono: userId,
+      modelo: analysis.model_chosen,
+      zona: analysis.zone,
+      presupuesto: analysis.budget_ars,
+      notas: analysis.notes,
+      origen: 'WhatsApp',
+    });
+  }
 
   // Step 2: resolve slots — either use stored ones (client confirming) or fetch fresh ones
   let availableSlots = null;
