@@ -9,6 +9,8 @@ let cacheTime = null;
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
 
 export async function getCRMConfig() {
+  console.log('getCRMConfig llamada - CRM_URL:', CRM_URL ? 'definida' : 'NO DEFINIDA');
+  console.log('getCRMConfig - CRM_USER_ID:', CRM_USER_ID ? CRM_USER_ID : 'NO DEFINIDO');
   if (cachedConfig && Date.now() - cacheTime < CACHE_TTL) {
     return cachedConfig;
   }

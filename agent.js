@@ -68,6 +68,7 @@ function formatSlotsBlock(slots) {
 }
 
 async function buildSystemBlocks(availableSlots = null) {
+  console.log('Llamando getModels()...');
   const models = await getModels();
   const blocks = [
     { type: 'text', text: getSystemPrompt(models), cache_control: { type: 'ephemeral' } },
