@@ -6,7 +6,7 @@ const CRM_USER_ID = process.env.CRM_USER_ID;
 
 let cachedConfig = null;
 let cacheTime = null;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+const CACHE_TTL = 30 * 1000; // 30 segundos
 
 export async function getCRMConfig() {
   console.log('getCRMConfig llamada - CRM_URL:', CRM_URL ? 'definida' : 'NO DEFINIDA');
@@ -23,6 +23,7 @@ export async function getCRMConfig() {
     console.log('getCRMConfig data:', JSON.stringify(res.data));
     cachedConfig = res.data?.[0] || null;
     cacheTime = Date.now();
+    console.log('Config CRM cargada - precio PB:', cachedConfig?.calc_precio_pb);
     return cachedConfig;
   } catch (err) {
     console.error('getCRMConfig error completo:', err.response?.status, err.response?.data, err.message);
