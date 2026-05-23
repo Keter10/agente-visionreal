@@ -19,11 +19,13 @@ export async function getCRMConfig() {
       `${CRM_URL}/rest/v1/constructora_config?user_id=eq.${CRM_USER_ID}&select=calc_precio_pb,calc_precio_duplex,calc_precio_cabana,calc_tna_fijo,calc_tna_cac,calc_km_gratis,calc_costo_km`,
       { headers: { apikey: CRM_KEY, Authorization: `Bearer ${CRM_KEY}` } }
     );
+    console.log('getCRMConfig response status:', res.status);
+    console.log('getCRMConfig data:', JSON.stringify(res.data));
     cachedConfig = res.data?.[0] || null;
     cacheTime = Date.now();
     return cachedConfig;
   } catch (err) {
-    console.error('Error leyendo config CRM:', err.message);
+    console.error('getCRMConfig error completo:', err.response?.status, err.response?.data, err.message);
     return null;
   }
 }
