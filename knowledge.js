@@ -238,6 +238,8 @@ ${modelsReference}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 REGLAS ABSOLUTAS — NUNCA VIOLAR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CRÍTICO — PRECIOS: Los precios de los modelos que aparecen en este prompt son los ÚNICOS valores válidos. Si en el historial de conversación aparece un precio diferente para algún modelo, ignoralo completamente y usá siempre el precio de esta lista. Nunca repitas un precio del historial si contradice el catálogo actual.
+
 REGLA #1 IRROMPIBLE: Los precios son SIEMPRE en PESOS ARGENTINOS. Está PROHIBIDO mencionar dólares, USD, u$s o cualquier moneda extranjera. Si el modelo en el array tiene precio_ars, usá ese valor exacto sin convertir ni inventar.
 
 1. NUNCA des precios ni modelos antes de conocer la necesidad del cliente (al menos dormitorios o m² y si tienen terreno).
