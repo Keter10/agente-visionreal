@@ -54,13 +54,19 @@ export async function getModels() {
   const priceDuplex = config?.calc_precio_duplex  || FALLBACK_PRICES.duplex;
   const priceCabana = config?.calc_precio_cabana  || FALLBACK_PRICES.cabana;
 
-  return BASE_MODELS.map((m) => {
+  console.log('Precios aplicados:', { pb: pricePB, duplex: priceDuplex, cabana: priceCabana });
+
+  const models = BASE_MODELS.map((m) => {
     let pricePerM2;
     if (m.tipo === 'Planta Baja') pricePerM2 = pricePB;
     else if (m.tipo === 'Dos Plantas') pricePerM2 = priceDuplex;
     else pricePerM2 = priceCabana; // Cabaña, Quincho
     return { ...m, precio_ars: m.m2 * pricePerM2 };
   });
+
+  console.log('Ejemplo modelo VR 30m²:', models.find(m => m.id === 'vr-30')?.precio_ars);
+
+  return models;
 }
 
 export function getSystemPrompt(models) {
