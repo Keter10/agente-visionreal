@@ -2,7 +2,10 @@ import 'dotenv/config';
 import express from 'express';
 import twilio from 'twilio';
 import axios from 'axios';
-import { processMessage, getFollowUpCandidates, markFollowUpSent } from './agent.js';
+import Anthropic from '@anthropic-ai/sdk';
+import { processMessage, getFollowUpCandidates, markFollowUpSent, followUpTracking } from './agent.js';
+
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 process.on('uncaughtException', (err) => {
   console.error('CRASH — uncaughtException:', err);
@@ -115,12 +118,33 @@ app.get('/seguimiento', async (_req, res) => {
   const candidates = getFollowUpCandidates();
   const results = [];
 
-  for (const { userId, clientName } of candidates) {
-    const nombre = clientName ? clientName.split(' ')[0] : null;
-    const saludo = nombre ? `Hola ${nombre}!` : '¡Hola!';
-    const message = `${saludo} 👋 Soy Sol de Visión Real. ¿Pudiste hablar con tu familia sobre el proyecto? Quedé a disposición si tenés alguna duda.`;
+  for (const { userId } of candidates) {
+    const contextData = followUpTracking.get(userId);
+    const prompt = `Sos Sol, asesora de Visión Real Viviendas. Escribí UN mensaje corto de seguimiento (máximo 2 líneas, tono cálido y sin presión, sin asumir nada sobre la situación personal del cliente) para retomar una conversación de WhatsApp.
+
+Contexto:
+- Nombre: ${contextData?.clientName || 'desconocido'}
+- Etapa donde quedó: ${contextData?.stage || 'desconocida'}
+- Nivel de interés: ${contextData?.intent || 'desconocido'}
+
+Según la etapa:
+- saludo/necesidad: invitar a retomar la consulta
+- presupuesto: recordar que quedó pendiente ver opciones
+- presentacion: preguntar si pudo ver la info que le mandaste
+- objecion: retomar sin presión desde la duda que tenía
+- cierre/agenda: recordar que quedó pendiente coordinar el llamado con Martín
+
+IMPORTANTE: No menciones familia, pareja ni ningún tercero. El mensaje es para el cliente directamente.
+
+Respondé SOLO con el mensaje, sin comillas ni explicaciones.`;
 
     try {
+      const response = await client.messages.create({
+        model: 'claude-haiku-4-5',
+        max_tokens: 150,
+        messages: [{ role: 'user', content: prompt }],
+      });
+      const message = response.content[0].text.trim();
       await sendMetaMessage(userId, message);
       markFollowUpSent(userId);
       results.push({ userId, status: 'sent' });

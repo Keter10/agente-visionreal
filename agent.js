@@ -10,7 +10,7 @@ const conversations = new Map();
 const HISTORY_TTL_MS = 30 * 60 * 1000;
 const MAX_HISTORY_MESSAGES = 20;
 
-const followUpTracking = new Map();
+export const followUpTracking = new Map();
 const FOLLOW_UP_TTL_MS = 48 * 60 * 60 * 1000;
 
 function getEntry(userId) {
