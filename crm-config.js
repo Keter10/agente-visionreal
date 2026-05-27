@@ -8,6 +8,10 @@ let cachedConfig = null;
 let cacheTime = null;
 const CACHE_TTL = 30 * 1000; // 30 segundos
 
+let cachedModels = null;
+let modelsCacheTime = null;
+const MODELS_CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+
 export async function getCRMConfig() {
   console.log('getCRMConfig llamada - CRM_URL:', CRM_URL ? 'definida' : 'NO DEFINIDA');
   console.log('getCRMConfig - CRM_USER_ID:', CRM_USER_ID ? CRM_USER_ID : 'NO DEFINIDO');
@@ -28,5 +32,23 @@ export async function getCRMConfig() {
   } catch (err) {
     console.error('getCRMConfig error completo:', err.response?.status, err.response?.data, err.message);
     return null;
+  }
+}
+
+export async function getCRMModels() {
+  if (cachedModels && Date.now() - modelsCacheTime < MODELS_CACHE_TTL) {
+    return cachedModels;
+  }
+  if (!CRM_URL || !CRM_KEY || !CRM_USER_ID) return [];
+  try {
+    const res = await axios.get(
+      `${CRM_URL}/rest/v1/constructora_modelos?user_id=eq.${CRM_USER_ID}&activo=eq.true&select=nombre,m2,tipo,precio_m2`,
+      { headers: { apikey: CRM_KEY, Authorization: `Bearer ${CRM_KEY}` } }
+    );
+    cachedModels = res.data || [];
+    modelsCacheTime = Date.now();
+    return cachedModels;
+  } catch {
+    return [];
   }
 }

@@ -1,4 +1,4 @@
-import { getCRMConfig } from './crm-config.js';
+import { getCRMConfig, getCRMModels } from './crm-config.js';
 
 export const COMPANY = {
   nombre: 'Visión Real Viviendas',
@@ -54,8 +54,6 @@ export async function getModels() {
   const priceDuplex = config?.calc_precio_duplex  || FALLBACK_PRICES.duplex;
   const priceCabana = config?.calc_precio_cabana  || FALLBACK_PRICES.cabana;
 
-  console.log('Precios aplicados:', { pb: pricePB, duplex: priceDuplex, cabana: priceCabana });
-
   const models = BASE_MODELS.map((m) => {
     let pricePerM2;
     if (m.tipo === 'Planta Baja') pricePerM2 = pricePB;
@@ -64,9 +62,24 @@ export async function getModels() {
     return { ...m, precio_ars: m.m2 * pricePerM2 };
   });
 
-  console.log('Ejemplo modelo VR 30m²:', models.find(m => m.id === 'vr-30')?.precio_ars);
+  let crmModels = [];
+  try {
+    const raw = await getCRMModels();
+    crmModels = raw.map((m) => ({
+      id: `crm-${m.nombre.toLowerCase().replace(/\s+/g, '-')}`,
+      nombre: m.nombre,
+      tipo: m.tipo,
+      m2: m.m2,
+      ambientes: 'a confirmar con Martín',
+      descripcion: 'Modelo personalizado disponible bajo consulta.',
+      catalogo_pdf: null,
+      precio_ars: m.m2 * m.precio_m2,
+    }));
+  } catch {
+    // fallback silencioso — Sol sigue con modelos base
+  }
 
-  return models;
+  return [...models, ...crmModels];
 }
 
 export function getSystemPrompt(models) {
