@@ -42,7 +42,18 @@ const BASE_MODELS = [
   { id: 'vr-quincho-40', nombre: 'VR Quincho 40m²', tipo: 'Quincho', m2: 40, ambientes: 'Salón + parrilla + baño',              descripcion: 'Quincho de madera para entretener. Ideal como complemento de la vivienda principal.', catalogo_pdf: `${BASE_URL}/catalogo-quincho-40m2.pdf` },
 ];
 
+// Cache de modelos resueltos — TTL de 5 min para que un ciclo de conversación
+// siempre use el mismo precio_m2, sin mezclar CRM y fallback entre mensajes.
+let resolvedModelsCache = null;
+let resolvedModelsCacheTime = null;
+const RESOLVED_MODELS_TTL = 5 * 60 * 1000;
+
 export async function getModels() {
+  if (resolvedModelsCache && Date.now() - resolvedModelsCacheTime < RESOLVED_MODELS_TTL) {
+    return resolvedModelsCache;
+  }
+
+  // Precio por m² se resuelve UNA SOLA VEZ y se graba en cada objeto modelo.
   let config = null;
   try {
     config = await getCRMConfig();
@@ -55,11 +66,11 @@ export async function getModels() {
   const priceCabana = config?.calc_precio_cabana  || FALLBACK_PRICES.cabana;
 
   const models = BASE_MODELS.map((m) => {
-    let pricePerM2;
-    if (m.tipo === 'Planta Baja') pricePerM2 = pricePB;
-    else if (m.tipo === 'Dos Plantas') pricePerM2 = priceDuplex;
-    else pricePerM2 = priceCabana; // Cabaña, Quincho
-    return { ...m, precio_ars: m.m2 * pricePerM2 };
+    let precio_m2;
+    if (m.tipo === 'Planta Baja') precio_m2 = pricePB;
+    else if (m.tipo === 'Dos Plantas') precio_m2 = priceDuplex;
+    else precio_m2 = priceCabana;
+    return { ...m, precio_m2, precio_ars: m.m2 * precio_m2 };
   });
 
   let crmModels = [];
@@ -73,13 +84,16 @@ export async function getModels() {
       ambientes: 'a confirmar con Martín',
       descripcion: 'Modelo personalizado disponible bajo consulta.',
       catalogo_pdf: null,
+      precio_m2: m.precio_m2,
       precio_ars: m.m2 * m.precio_m2,
     }));
   } catch {
     // fallback silencioso — Sol sigue con modelos base
   }
 
-  return [...models, ...crmModels];
+  resolvedModelsCache = [...models, ...crmModels];
+  resolvedModelsCacheTime = Date.now();
+  return resolvedModelsCache;
 }
 
 export function getSystemPrompt(models) {
