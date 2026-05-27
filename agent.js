@@ -107,7 +107,6 @@ function formatSlotsBlock(slots) {
 }
 
 async function buildSystemBlocks(availableSlots = null) {
-  console.log('Llamando getModels()...');
   const models = await getModels();
   const blocks = [
     { type: 'text', text: getSystemPrompt(models), cache_control: { type: 'ephemeral' } },
@@ -293,7 +292,7 @@ export async function processMessage(userId, userMessage) {
 
   // Step 1: fast analysis with Haiku (determines intent and whether scheduling is needed)
   const analysis = await analyzeConversation(userMessage, historySummary);
-  console.log('Analysis result:', JSON.stringify(analysis));
+
 
   // Step 1b: registrar para seguimiento automático y cargar al CRM
   if (analysis.intent === 'ALTA' || analysis.intent === 'MEDIA') {
