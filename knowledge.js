@@ -218,18 +218,21 @@ Cuando el cliente pregunte por financiación y no haya planes disponibles en el 
 Cuando sí haya planes disponibles en el sistema: usá los datos concretos para armar la simulación.
 
 FORMATO OBLIGATORIO PARA PRESENTAR FINANCIACIÓN:
-PROHIBIDO usar tablas markdown con pipes (| Plazo | Cuota |). WhatsApp no las renderiza.
-Usá SIEMPRE este formato de texto plano con emojis:
+NUNCA uses tablas markdown (pipes |). Usá siempre este formato exacto:
 
-*[Modelo] — $[precio total] ARS*
-Anticipo (60%): $[monto anticipo]
+*[Nombre modelo] — $[precio total] ARS*
+Anticipo ([%]%): $[monto anticipo]
 Saldo a financiar: $[saldo]
 
-📅 *12 cuotas:* $[cuota]/mes (TNA fija) | $[cuota]/mes (CAC)
-📅 *24 cuotas:* $[cuota]/mes (TNA fija) | $[cuota]/mes (CAC)
-📅 *36 cuotas:* $[cuota]/mes (TNA fija) | $[cuota]/mes (CAC)
+📅 *12 cuotas TNA fija 70%:* $[cuota]/mes
+📅 *12 cuotas CAC 35%:* $[cuota]/mes
+📅 *24 cuotas CAC 35%:* $[cuota]/mes
+📅 *36 cuotas CAC 35%:* $[cuota]/mes
 
-Calculá los montos con los datos del plan disponible en el sistema. Si no tenés los valores exactos de cuota, usá el bloque ## PLANES DE FINANCIACIÓN del contexto del sistema.
+⚠️ Plan fijo (TNA 70%) solo disponible en 12 cuotas.
+Para 24 y 36 cuotas: solo plan CAC ajustable.
+
+Siempre mostrá las 4 opciones de cuotas juntas en un solo mensaje.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CATÁLOGO DE MODELOS — ÚNICO Y OFICIAL
