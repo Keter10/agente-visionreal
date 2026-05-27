@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import twilio from 'twilio';
 import axios from 'axios';
-import { processMessage } from './agent.js';
+import { processMessage, getFollowUpCandidates, markFollowUpSent } from './agent.js';
 
 process.on('uncaughtException', (err) => {
   console.error('CRASH — uncaughtException:', err);
@@ -109,6 +109,29 @@ app.post('/webhook', async (req, res) => {
   } catch (err) {
     console.error(`Error procesando mensaje Meta de ${userId}:`, err.message);
   }
+});
+
+app.get('/seguimiento', async (_req, res) => {
+  const candidates = getFollowUpCandidates();
+  const results = [];
+
+  for (const { userId, clientName } of candidates) {
+    const nombre = clientName ? clientName.split(' ')[0] : null;
+    const saludo = nombre ? `Hola ${nombre}!` : '¡Hola!';
+    const message = `${saludo} 👋 Soy Sol de Visión Real. ¿Pudiste hablar con tu familia sobre el proyecto? Quedé a disposición si tenés alguna duda.`;
+
+    try {
+      await sendMetaMessage(userId, message);
+      markFollowUpSent(userId);
+      results.push({ userId, status: 'sent' });
+      console.log(`[seguimiento] Mensaje enviado a ${userId}`);
+    } catch (err) {
+      results.push({ userId, status: 'error', error: err.message });
+      console.error(`[seguimiento] Error enviando a ${userId}:`, err.message);
+    }
+  }
+
+  res.json({ checked: new Date().toISOString(), sent: results.length, results });
 });
 
 app.get('/health', (_req, res) => {

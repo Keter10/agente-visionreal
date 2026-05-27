@@ -10,6 +10,9 @@ const conversations = new Map();
 const HISTORY_TTL_MS = 30 * 60 * 1000;
 const MAX_HISTORY_MESSAGES = 20;
 
+const followUpTracking = new Map();
+const FOLLOW_UP_TTL_MS = 48 * 60 * 60 * 1000;
+
 function getEntry(userId) {
   const entry = conversations.get(userId);
   if (!entry) return null;
@@ -54,6 +57,42 @@ function isSellerNotified(userId) {
 function setSellerNotified(userId) {
   const entry = conversations.get(userId);
   if (entry) entry.sellerNotified = true;
+}
+
+function upsertFollowUp(userId, stage, intent, clientName) {
+  followUpTracking.set(userId, {
+    lastActivity: Date.now(),
+    stage,
+    intent,
+    clientName: clientName || followUpTracking.get(userId)?.clientName,
+    followUpSent: false,
+  });
+}
+
+export function getFollowUpCandidates() {
+  const now = Date.now();
+  const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
+  const candidates = [];
+  for (const [userId, data] of followUpTracking.entries()) {
+    if (now - data.lastActivity > FOLLOW_UP_TTL_MS) {
+      followUpTracking.delete(userId);
+      continue;
+    }
+    if (
+      now - data.lastActivity >= TWENTY_FOUR_HOURS_MS &&
+      (data.intent === 'ALTA' || data.intent === 'MEDIA') &&
+      data.stage !== 'agenda' &&
+      !data.followUpSent
+    ) {
+      candidates.push({ userId, clientName: data.clientName });
+    }
+  }
+  return candidates;
+}
+
+export function markFollowUpSent(userId) {
+  const entry = followUpTracking.get(userId);
+  if (entry) entry.followUpSent = true;
 }
 
 function formatSlotsBlock(slots) {
@@ -256,8 +295,9 @@ export async function processMessage(userId, userMessage) {
   const analysis = await analyzeConversation(userMessage, historySummary);
   console.log('Analysis result:', JSON.stringify(analysis));
 
-  // Step 1b: cargar lead al CRM si hay intención de compra
+  // Step 1b: registrar para seguimiento automático y cargar al CRM
   if (analysis.intent === 'ALTA' || analysis.intent === 'MEDIA') {
+    upsertFollowUp(userId, analysis.stage, analysis.intent, analysis.client_name);
     await upsertLeadCRM({
       nombre: analysis.client_name,
       telefono: userId,
