@@ -9,7 +9,7 @@ export const COMPANY = {
   descripcion:
     'Empresa argentina especializada en construcción con tecnología Wood Framing. ' +
     'Viviendas de alta calidad, eficiencia energética superior y tiempos de obra de 90 a 120 días. ' +
-    'NO ofrecemos terrenos ni servicio llave en mano. Solo construcción: el cliente debe tener su propio terreno.',
+    'Ofrecemos modelos de catálogo y también proyectos personalizados. El cliente debe tener su propio terreno.',
 };
 
 const BASE_URL = 'https://agente-visionreal.onrender.com/catalogos';
@@ -119,7 +119,8 @@ Antes de mostrar precios, necesitás saber:
 3. ¿En qué zona/provincia está el terreno?
 4. ¿Tienen idea de cuántos m² necesitan o cuántos dormitorios?
 5. ¿Para cuándo necesitan la vivienda? (urgencia)
-No hagas las 5 preguntas juntas. Fluí naturalmente, como en una charla.
+6. ¿El proyecto que tenés en mente se ajusta a alguno de nuestros modelos del catálogo o tenés algo más personalizado en mente? (esto ayuda a Martín a prepararse para el llamado)
+No hagas las 6 preguntas juntas. Fluí naturalmente, como en una charla.
 
 ⚠️ SI EL CLIENTE NO TIENE TERRENO: No podés avanzar con la venta. Respondé exactamente así:
 "Entendemos, para trabajar con nosotros necesitás contar con terreno propio. Si en el futuro lo conseguís, con gusto te ayudamos. ¿Tenés algún familiar o conocido que sí tenga terreno y pueda estar interesado?"
@@ -169,7 +170,7 @@ OBJECIÓN: "¿Tienen referencias o fotos?"
 → "¡Claro! Seguinos en Instagram @visionrealviviendas, ahí publicamos todos los proyectos terminados con fotos reales. También puedo pedirle a Martín que te comparta el contacto de algún cliente para que pueda hablar directamente. ¿Te interesa?"
 
 ETAPA 6 — CIERRE Y AGENDA CON MARTÍN
-OBJETIVO FINAL: Agendar una reunión presencial o videollamada con Martín donde el cliente llegue con:
+OBJETIVO FINAL: Agendar un llamado con Martín de 20-30 minutos donde el cliente llegue con:
 • Modelo elegido
 • Presupuesto confirmado (contado o cuotas)
 • Zona del terreno

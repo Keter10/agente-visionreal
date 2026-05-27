@@ -126,6 +126,7 @@ Respondé SOLO con JSON válido, sin texto extra:
   "client_name": null,
   "monthly_payment_ars": null,
   "model_chosen": null,
+  "project_type": null,
   "zone": null,
   "preferred_time": null,
   "notes": ""
@@ -141,6 +142,7 @@ Reglas:
 - budget_ars: número en pesos si lo mencionaron, sino null
 - monthly_payment_ars: número en pesos si mencionaron cuota mensual, sino null
 - model_chosen: nombre exacto del modelo si lo eligieron (ej: "VR 47m²"), sino null
+- project_type: "catalogo" si el cliente quiere un modelo del catálogo o eligió un modelo específico; "personalizado" si mencionó algo a medida o fuera del catálogo; null si no se mencionó
 - zone: provincia o ciudad del terreno si la mencionaron, sino null
 - preferred_time: horario preferido para que Martín llame si lo mencionaron, sino null
 - client_name: nombre si se presentaron, sino null
@@ -168,6 +170,7 @@ Reglas:
       client_name: null,
       monthly_payment_ars: null,
       model_chosen: null,
+      project_type: null,
       zone: null,
       preferred_time: null,
       notes: '',
@@ -194,6 +197,12 @@ function buildSellerNotification(userId, userMessage, analysis) {
   lines.push(`📱 *WhatsApp:* ${userId}`);
 
   if (analysis.model_chosen) lines.push(`🏠 *Modelo elegido:* ${analysis.model_chosen}`);
+
+  if (analysis.project_type === 'catalogo') {
+    lines.push(`📋 *Proyecto:* Catálogo — ${analysis.model_chosen || 'modelo por confirmar'}`);
+  } else if (analysis.project_type === 'personalizado') {
+    lines.push(`📋 *Proyecto:* Personalizado — ${analysis.notes || 'ver descripción'}`);
+  }
 
   if (analysis.budget_ars) {
     const paymentLabel =
