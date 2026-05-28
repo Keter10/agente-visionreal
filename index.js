@@ -27,6 +27,13 @@ const twilioClient = twilio(
   process.env.TWILIO_AUTH_TOKEN
 );
 
+const processedMessageIds = new Set();
+
+function addWithTTL(id) {
+  processedMessageIds.add(id);
+  setTimeout(() => processedMessageIds.delete(id), 10 * 60 * 1000);
+}
+
 async function sendMetaMessage(to, text) {
   await axios.post(
     `https://graph.facebook.com/v20.0/${process.env.META_PHONE_NUMBER_ID}/messages`,
@@ -92,6 +99,9 @@ app.post('/webhook', async (req, res) => {
   const message = change?.messages?.[0];
 
   if (!message || message.type !== 'text') return;
+
+  if (processedMessageIds.has(message.id)) return;
+  addWithTTL(message.id);
 
   const userId = message.from;
   const body = message.text?.body;
