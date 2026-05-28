@@ -98,8 +98,8 @@ export function markFollowUpSent(userId) {
 function formatSlotsBlock(slots) {
   if (!slots?.length) return null;
   const lines = [
-    '## HORARIOS DISPONIBLES PARA REUNIÓN CON MARTÍN',
-    'Ofrecé estas opciones exactas cuando el cliente quiera agendar. Si el cliente elige una, confirmá el horario elegido.',
+    '## HORARIOS DISPONIBLES PARA LLAMADO CON MARTÍN',
+    'Ofrecé estas opciones cuando el cliente quiera agendar. Usá SIEMPRE "llamado" (nunca "reunión" ni "cita"). Al confirmar la elección, decí: "Perfecto [nombre], quedó agendado tu llamado con Martín para el [día]. 📞 Él te va a llamar a este número para charlar sobre tu proyecto y preparar la propuesta."',
     '',
   ];
   slots.forEach((s, i) => lines.push(`Opción ${i + 1}: ${s.label}`));
@@ -229,7 +229,7 @@ function formatFinancingForSeller(rawText) {
 }
 
 function buildSellerNotification(userId, userMessage, analysis) {
-  const lines = ['🔥 *CLIENTE LISTO PARA REUNIÓN CON MARTÍN*', ''];
+  const lines = ['🔥 *CLIENTE LISTO PARA LLAMADO CON MARTÍN*', ''];
 
   if (analysis.client_name) lines.push(`👤 *Nombre:* ${analysis.client_name}`);
   lines.push(`📱 *WhatsApp:* ${userId}`);
