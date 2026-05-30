@@ -1,249 +1,281 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Política de Privacidad — Velox</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-:root {
-  --gold: #D4AF37;
-  --black: #080808;
-  --surface: #0f0f0f;
-  --border: rgba(255,255,255,0.07);
-  --text: #e0e0e0;
-  --muted: #666;
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--black);
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.8;
-}
-nav {
-  padding: 20px 40px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-}
-.nav-logo-mark {
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, #D4AF37, #F5D06E);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 16px;
-  color: #080808;
-}
-.nav-logo-text {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--text);
-}
-.container {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 60px 24px 120px;
-}
-.doc-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 16px;
-  display: block;
-}
-h1 {
-  font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 800;
-  letter-spacing: -2px;
-  line-height: 1.05;
-  margin-bottom: 16px;
-}
-.doc-date {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 48px;
-  padding-bottom: 48px;
-  border-bottom: 1px solid var(--border);
-}
-h2 {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  margin: 48px 0 16px;
-  color: #fff;
-}
-h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 28px 0 10px;
-  color: #ccc;
-}
-p { color: #888; margin-bottom: 16px; }
-ul { color: #888; padding-left: 24px; margin-bottom: 16px; }
-ul li { margin-bottom: 8px; line-height: 1.7; }
-strong { color: #ccc; font-weight: 600; }
-a { color: var(--gold); text-decoration: none; }
-a:hover { text-decoration: underline; }
-.highlight {
-  background: rgba(212,175,55,0.08);
-  border: 1px solid rgba(212,175,55,0.2);
-  border-radius: 12px;
-  padding: 20px 24px;
-  margin: 24px 0;
-  color: #aaa;
-  font-size: 14px;
-  line-height: 1.7;
-}
-footer {
-  padding: 40px;
-  border-top: 1px solid var(--border);
-  text-align: center;
-  color: var(--muted);
-  font-size: 13px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidad — Visión Real Viviendas</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fb;
+      color: #222;
+      line-height: 1.75;
+    }
+
+    header {
+      background: #1e2d6b;
+      color: #fff;
+      padding: 40px 24px 32px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      color: #c9d3f0;
+    }
+
+    .gold-bar {
+      height: 5px;
+      background: linear-gradient(90deg, #b8952a, #e0b84a, #b8952a);
+    }
+
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+    }
+
+    .update-badge {
+      display: inline-block;
+      background: #1e2d6b;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 32px;
+      letter-spacing: 0.4px;
+    }
+
+    section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px 32px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(30,45,107,0.07);
+      border-left: 5px solid #1e2d6b;
+    }
+
+    section h2 {
+      color: #1e2d6b;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    section h2 .num {
+      background: #b8952a;
+      color: #fff;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    section p {
+      font-size: 0.97rem;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    section p:last-child { margin-bottom: 0; }
+
+    ul {
+      margin: 10px 0 10px 20px;
+      color: #333;
+      font-size: 0.97rem;
+    }
+
+    ul li { margin-bottom: 6px; }
+
+    .highlight {
+      background: #f0f3fb;
+      border-radius: 7px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      font-size: 0.93rem;
+      color: #1e2d6b;
+      font-weight: 500;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .contact-item {
+      background: #f0f3fb;
+      border-radius: 8px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .contact-item .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #b8952a;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .contact-item a {
+      color: #1e2d6b;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .contact-item a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      color: #888;
+      font-size: 0.82rem;
+      border-top: 1px solid #e0e4ef;
+    }
+
+    footer span { color: #b8952a; font-weight: 600; }
+  </style>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-logo-mark">V</div>
-    <span class="nav-logo-text">Velox</span>
-  </a>
-  <a href="/" style="color:var(--muted);font-size:14px;text-decoration:none;">← Volver al inicio</a>
-</nav>
+  <header>
+    <h1>Política de Privacidad</h1>
+    <p>Visión Real Viviendas &mdash; Constructora en Wood Framing, Berazategui, Buenos Aires</p>
+  </header>
+  <div class="gold-bar"></div>
 
-<div class="container">
-  <span class="doc-label">Legal</span>
-  <h1>Política de<br/>Privacidad</h1>
-  <p class="doc-date">Última actualización: marzo de 2025</p>
+  <main>
+    <div class="update-badge">Última actualización: Mayo 2026</div>
 
-  <div class="highlight">
-    En Velox tomamos muy en serio la privacidad de tus datos. Esta política explica qué información recopilamos, cómo la usamos y cómo la protegemos, en cumplimiento de la Ley 25.326 de Protección de Datos Personales de la República Argentina.
-  </div>
+    <section>
+      <h2><span class="num">1</span> Introducción</h2>
+      <p>
+        En <strong>Visión Real Viviendas</strong> valoramos y respetamos la privacidad de nuestros clientes y contactos. Esta política describe cómo recopilamos, utilizamos y protegemos los datos personales que nos compartís a través de nuestros canales de comunicación, incluyendo WhatsApp, nuestro sitio web y redes sociales.
+      </p>
+      <p>
+        Somos una constructora especializada en viviendas con sistema constructivo <strong>Wood Framing</strong>, con sede en Berazategui, provincia de Buenos Aires, Argentina. Nos comprometemos a tratar tu información con confidencialidad, seriedad y de acuerdo con la legislación vigente.
+      </p>
+    </section>
 
-  <h2>1. Responsable del tratamiento</h2>
-  <p><strong>Martín De Canon</strong>, Argentina.<br/>
-  Email de contacto: <a href="mailto:agenciaupfling@gmail.com">agenciaupfling@gmail.com</a></p>
+    <section>
+      <h2><span class="num">2</span> Qué datos recopilamos</h2>
+      <p>Recopilamos únicamente la información necesaria para brindarte una atención personalizada y un presupuesto ajustado a tu proyecto. Los datos que podemos solicitar incluyen:</p>
+      <ul>
+        <li><strong>Nombre y apellido</strong></li>
+        <li><strong>Número de teléfono</strong> (WhatsApp)</li>
+        <li><strong>Zona o ubicación del terreno</strong> donde se proyecta la construcción</li>
+        <li><strong>Descripción del proyecto</strong> (superficie, cantidad de ambientes, estilo, etc.)</li>
+        <li><strong>Consultas e historial de conversación</strong> con nuestro asistente virtual</li>
+      </ul>
+      <div class="highlight">
+        No recopilamos datos sensibles como información financiera, documentos de identidad ni datos de salud.
+      </div>
+    </section>
 
-  <h2>2. Qué datos recopilamos</h2>
+    <section>
+      <h2><span class="num">3</span> Cómo usamos los datos</h2>
+      <p>La información que nos compartís se utiliza exclusivamente para:</p>
+      <ul>
+        <li>Elaborar <strong>presupuestos personalizados</strong> según tu proyecto y terreno</li>
+        <li>Coordinar <strong>llamados comerciales</strong> con nuestro equipo de ventas</li>
+        <li>Realizar <strong>seguimiento de tu consulta</strong> y acompañarte durante el proceso de decisión</li>
+        <li>Enviarte información relevante sobre nuestros modelos, financiamiento y novedades</li>
+      </ul>
+      <p>
+        No cedemos, vendemos ni compartimos tus datos con terceros, salvo que sea estrictamente necesario para la prestación del servicio (por ejemplo, coordinación de visitas a terreno con nuestros técnicos) o por requerimiento legal.
+      </p>
+    </section>
 
-  <h3>De los negocios (dueños)</h3>
-  <ul>
-    <li>Nombre y apellido</li>
-    <li>Email y contraseña (encriptada)</li>
-    <li>Teléfono</li>
-    <li>Nombre del negocio, dirección y descripción</li>
-    <li>Datos de conexión con Mercado Pago (token de acceso)</li>
-    <li>Configuración de servicios, precios y horarios</li>
-  </ul>
+    <section>
+      <h2><span class="num">4</span> Asistente virtual Sol (IA de WhatsApp)</h2>
+      <p>
+        <strong>Sol</strong> es nuestra asesora virtual disponible a través de WhatsApp. Está diseñada para responder consultas frecuentes, orientarte sobre nuestros modelos de viviendas y ayudarte a dar los primeros pasos hacia tu proyecto.
+      </p>
+      <p>
+        Sol funciona con tecnología de inteligencia artificial y puede registrar el contenido de la conversación para mejorar la atención y personalizar las respuestas. Las conversaciones son procesadas de forma automatizada y pueden ser revisadas por nuestro equipo comercial para ofrecerte un seguimiento adecuado.
+      </p>
+      <div class="highlight">
+        Sol no toma decisiones autónomas que te afecten legalmente. Ante cualquier duda, siempre podés solicitar hablar con un asesor humano.
+      </div>
+    </section>
 
-  <h3>De los clientes (usuarios finales)</h3>
-  <ul>
-    <li>Nombre y apellido</li>
-    <li>Email y teléfono</li>
-    <li>Fecha de nacimiento (opcional)</li>
-    <li>Historial de turnos y pagos</li>
-    <li>Notas internas del negocio sobre el cliente</li>
-  </ul>
+    <section>
+      <h2><span class="num">5</span> Almacenamiento y seguridad</h2>
+      <p>
+        Los datos de conversación y seguimiento se almacenan en <strong>Supabase</strong>, una plataforma de base de datos en la nube con cifrado en tránsito (TLS) y en reposo, cumpliendo estándares internacionales de seguridad.
+      </p>
+      <p>
+        Implementamos medidas técnicas y organizativas para proteger tu información contra accesos no autorizados, pérdida o alteración. El acceso a los datos está restringido al personal de Visión Real Viviendas que lo necesite para la atención al cliente.
+      </p>
+      <p>
+        Conservamos los datos mientras dure la relación comercial o el tiempo necesario para cumplir con obligaciones legales. Podés solicitar su eliminación en cualquier momento.
+      </p>
+    </section>
 
-  <h3>Datos técnicos</h3>
-  <ul>
-    <li>Dirección IP</li>
-    <li>Tipo de dispositivo y navegador</li>
-    <li>Páginas visitadas dentro de la plataforma</li>
-    <li>Fecha y hora de acceso</li>
-  </ul>
+    <section>
+      <h2><span class="num">6</span> Tus derechos (Ley 25.326)</h2>
+      <p>
+        De acuerdo con la <strong>Ley N.° 25.326 de Protección de Datos Personales</strong> de la República Argentina, tenés derecho a:
+      </p>
+      <ul>
+        <li><strong>Acceder</strong> a los datos personales que tenemos sobre vos</li>
+        <li><strong>Rectificar</strong> información incorrecta o incompleta</li>
+        <li><strong>Suprimir</strong> tus datos cuando ya no sean necesarios</li>
+        <li><strong>Oponerte</strong> al tratamiento de tus datos para fines comerciales</li>
+      </ul>
+      <p>
+        Para ejercer cualquiera de estos derechos, podés contactarnos a través de los medios indicados en la sección de contacto. Responderemos tu solicitud dentro de los plazos establecidos por la normativa vigente.
+      </p>
+      <div class="highlight">
+        La Agencia de Acceso a la Información Pública (AAIP) es el organismo de control en materia de protección de datos personales en Argentina.
+      </div>
+    </section>
 
-  <h2>3. Para qué usamos los datos</h2>
-  <ul>
-    <li>Proveer y mejorar el servicio de Velox</li>
-    <li>Gestionar la cuenta y suscripción del negocio</li>
-    <li>Procesar cobros y devoluciones de señas</li>
-    <li>Enviar recordatorios de turnos y notificaciones del servicio</li>
-    <li>Comunicar cambios importantes en la plataforma</li>
-    <li>Cumplir con obligaciones legales</li>
-  </ul>
+    <section>
+      <h2><span class="num">7</span> Contacto</h2>
+      <p>Para consultas sobre esta política, para ejercer tus derechos o para cualquier inquietud relacionada con tu privacidad, podés comunicarte con nosotros por los siguientes medios:</p>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="label">WhatsApp</div>
+          <a href="https://wa.me/5491160429235" target="_blank" rel="noopener">+54 9 11 6042-9235</a>
+        </div>
+        <div class="contact-item">
+          <div class="label">Sitio web</div>
+          <a href="https://visionreal.com.ar" target="_blank" rel="noopener">visionreal.com.ar</a>
+        </div>
+        <div class="contact-item">
+          <div class="label">Instagram</div>
+          <a href="https://instagram.com/visionrealviviendas" target="_blank" rel="noopener">@visionrealviviendas</a>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  <p><strong>No vendemos ni compartimos tus datos con terceros con fines comerciales.</strong></p>
-
-  <h2>4. Compartición de datos con terceros</h2>
-  <p>Velox puede compartir datos con los siguientes proveedores únicamente para prestar el servicio:</p>
-  <ul>
-    <li><strong>Mercado Pago</strong> — procesamiento de pagos y devoluciones</li>
-    <li><strong>Supabase</strong> — almacenamiento seguro de datos en la nube</li>
-    <li><strong>Resend</strong> — envío de emails transaccionales</li>
-    <li><strong>Vercel</strong> — hosting de la plataforma</li>
-  </ul>
-  <p>Todos estos proveedores cuentan con sus propias políticas de privacidad y medidas de seguridad adecuadas.</p>
-
-  <h2>5. Cookies</h2>
-  <p>Velox utiliza cookies técnicas esenciales para el funcionamiento de la plataforma (sesión de usuario, preferencias). Estas cookies no recopilan información personal con fines publicitarios.</p>
-  <p>En el futuro podríamos incorporar cookies analíticas (Google Analytics) para mejorar la experiencia. En ese caso actualizaremos esta política y te informaremos.</p>
-
-  <h2>6. Seguridad de los datos</h2>
-  <p>Implementamos medidas técnicas y organizativas para proteger tus datos:</p>
-  <ul>
-    <li>Conexiones cifradas mediante HTTPS</li>
-    <li>Contraseñas almacenadas con hash seguro</li>
-    <li>Acceso restringido a los datos según rol</li>
-    <li>Infraestructura en proveedores cloud con certificaciones de seguridad</li>
-  </ul>
-
-  <h2>7. Retención de datos</h2>
-  <p>Conservamos los datos mientras la cuenta esté activa. Si un negocio cancela su suscripción, sus datos se conservan por 90 días y luego se eliminan, salvo obligación legal de conservarlos por más tiempo.</p>
-  <p>Los datos de clientes (reservas, pagos) se conservan mientras el negocio tenga cuenta activa.</p>
-
-  <h2>8. Tus derechos</h2>
-  <p>En cumplimiento de la Ley 25.326, tenés derecho a:</p>
-  <ul>
-    <li><strong>Acceso:</strong> solicitarnos qué datos tenemos sobre vos</li>
-    <li><strong>Rectificación:</strong> corregir datos inexactos</li>
-    <li><strong>Eliminación:</strong> solicitar la baja de tus datos</li>
-    <li><strong>Oposición:</strong> oponerte al tratamiento de tus datos</li>
-  </ul>
-  <p>Para ejercer cualquiera de estos derechos escribinos a <a href="mailto:agenciaupfling@gmail.com">agenciaupfling@gmail.com</a>. Respondemos en un plazo máximo de 10 días hábiles.</p>
-  <p>También podés presentar una denuncia ante la <strong>Agencia de Acceso a la Información Pública</strong> (AAIP) si considerás que tus derechos no fueron respetados.</p>
-
-  <h2>9. Transferencia internacional de datos</h2>
-  <p>Algunos de nuestros proveedores (Supabase, Vercel, Resend) operan en servidores fuera de Argentina. En todos los casos elegimos proveedores que cumplen con estándares internacionales de protección de datos equivalentes o superiores a los exigidos por la legislación argentina.</p>
-
-  <h2>10. Menores de edad</h2>
-  <p>Velox está dirigido a mayores de 18 años. Los menores de edad pueden ser titulares de turnos siempre que sean gestionados por un adulto responsable. No recopilamos intencionalmente datos personales de menores sin supervisión adulta.</p>
-
-  <h2>11. Modificaciones</h2>
-  <p>Podemos actualizar esta política periódicamente. Los cambios serán notificados por email y publicados en esta página con la fecha de actualización.</p>
-
-  <h2>12. Contacto</h2>
-  <p>Para consultas sobre privacidad y protección de datos: <a href="mailto:agenciaupfling@gmail.com">agenciaupfling@gmail.com</a></p>
-
-</div>
-
-<footer>
-  © 2025 Velox — Martín De Canon · <a href="/terminos.html">Términos y Condiciones</a>
-</footer>
+  <footer>
+    &copy; 2026 <span>Visión Real Viviendas</span> &mdash; Todos los derechos reservados. Berazategui, Buenos Aires, Argentina.
+  </footer>
 
 </body>
 </html>
