@@ -4,6 +4,8 @@ import twilio from 'twilio';
 import axios from 'axios';
 import Anthropic from '@anthropic-ai/sdk';
 import { processMessage, getFollowUpCandidates, markFollowUpSent, followUpTracking } from './agent.js';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -21,6 +23,9 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use('/catalogos', express.static('catalogos'));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.use(express.static(join(__dirname, 'public')));
 
 const twilioClient = twilio(
   process.env.TWILIO_ACCOUNT_SID,
