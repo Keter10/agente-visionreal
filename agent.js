@@ -6,6 +6,8 @@ import { upsertLeadCRM } from './crm.js';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+const MARTIN_USER_ID = '5491160429235';
+
 const conversations = new Map();
 const HISTORY_TTL_MS = 30 * 60 * 1000;
 const MAX_HISTORY_MESSAGES = 20;
@@ -104,6 +106,39 @@ function formatSlotsBlock(slots) {
   ];
   slots.forEach((s, i) => lines.push(`Opción ${i + 1}: ${s.label}`));
   return lines.join('\n');
+}
+
+function getInternalSystemPrompt(models, financingPlans) {
+  const modelsReference = models
+    .map(
+      (m) =>
+        `• ${m.nombre} (${m.tipo}) | ${m.m2}m² | ${m.ambientes} | $${m.precio_ars.toLocaleString('es-AR')} ARS${m.catalogo_pdf ? ` | PDF: ${m.catalogo_pdf}` : ''}`
+    )
+    .join('\n');
+
+  return `Sos Sol en modo asistente interno. Estás hablando con Martín — director comercial de Visión Real Viviendas. No sos agente de ventas: sos su herramienta de trabajo. Respondé directo, sin rodeos, como a un colega.
+
+MODO: ASISTENTE INTERNO — sin calificación de leads, sin CRM, sin agenda de llamados.
+
+CAPACIDADES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. PRECIOS Y MODELOS: Acceso completo al catálogo actualizado con precios en ARS.
+2. SIMULACIÓN DE FINANCIACIÓN: Calculá cuotas para cualquier modelo con los planes disponibles.
+3. MENSAJES DE WHATSAPP: Cuando Martín pida un mensaje para un cliente, armalo completo y listo para copiar — formato WhatsApp real (emojis, saltos de línea, tono comercial cálido), encerrado entre líneas "---" para que sea fácil de identificar.
+4. DUDAS TÉCNICAS WOOD FRAMING: Respondé sobre estructura, aislación, tiempos de obra, normativas, resistencia, etc.
+5. PRESUPUESTOS RÁPIDOS: Armá presupuestos con desglose completo (precio base + extras, distancia, terminaciones).
+
+CATÁLOGO COMPLETO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${modelsReference}
+
+${financingPlans ? `PLANES DE FINANCIACIÓN\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n${financingPlans}\n` : ''}
+REGLAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Tono directo, tuteo, sin frases de venta ni cierre comercial.
+• Podés usar tablas o listas según lo que sea más claro.
+• No termines con preguntas de seguimiento innecesarias.
+• Si falta info para completar una simulación o mensaje, preguntá puntualmente qué falta.`;
 }
 
 async function buildSystemBlocks(availableSlots = null) {
@@ -287,7 +322,37 @@ function summarizeHistory(messages) {
     .join('\n');
 }
 
+async function processInternalMessage(userId, userMessage) {
+  const history = getHistory(userId);
+  const messages = [...history, { role: 'user', content: userMessage }];
+
+  const models = await getModels();
+  const financingPlans = getFinancingPlans();
+
+  const response = await client.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 1500,
+    system: [
+      {
+        type: 'text',
+        text: getInternalSystemPrompt(models, financingPlans),
+        cache_control: { type: 'ephemeral' },
+      },
+    ],
+    messages,
+  });
+
+  const assistantMessage = response.content[0].text;
+  updateHistory(userId, [...messages, { role: 'assistant', content: assistantMessage }]);
+
+  return { reply: assistantMessage, notifySeller: false, sellerMessage: null, analysis: null, eventCreated: false };
+}
+
 export async function processMessage(userId, userMessage) {
+  if (userId === MARTIN_USER_ID) {
+    return processInternalMessage(userId, userMessage);
+  }
+
   const historySummary = summarizeHistory(getHistory(userId));
 
   // Step 1: fast analysis with Haiku (determines intent and whether scheduling is needed)
