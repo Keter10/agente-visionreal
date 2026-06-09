@@ -20,6 +20,23 @@ const FALLBACK_PRICES = {
   cabana: 380_000,
 };
 
+export function calcularFinanciacion(precioTotal, anticipoPct = 0.6) {
+  const anticipo = Math.round(precioTotal * anticipoPct);
+  const saldo = precioTotal - anticipo;
+  const cuota = (s, i, n) => Math.round(s * i / (1 - Math.pow(1 + i, -n)));
+  const i70 = 0.70 / 12;
+  const i35 = 0.35 / 12;
+  return {
+    anticipo,
+    anticipoPct,
+    saldo,
+    cuota12TNA70: cuota(saldo, i70, 12),
+    cuota12CAC35: cuota(saldo, i35, 12),
+    cuota24CAC35: cuota(saldo, i35, 24),
+    cuota36CAC35: cuota(saldo, i35, 36),
+  };
+}
+
 const BASE_MODELS = [
   // ── PLANTA BAJA ───────────────────────────────────────────────────────────
   { id: 'vr-15',  nombre: 'VR 15m²',  tipo: 'Planta Baja', m2: 15,  ambientes: '1 ambiente + baño',                       descripcion: 'Ideal para estudio o vivienda unipersonal compacta.',                           catalogo_pdf: `${BASE_URL}/catalogo-15m2.pdf` },
@@ -102,6 +119,18 @@ export function getSystemPrompt(models) {
       (m) =>
         `• ${m.nombre} (${m.tipo}) | ${m.m2}m² | ${m.ambientes} | $${m.precio_ars.toLocaleString('es-AR')} ARS${m.catalogo_pdf ? `\n  Catálogo PDF: ${m.catalogo_pdf}` : ''}`
     )
+    .join('\n');
+
+  const financingReference = models
+    .map((m) => {
+      const f = calcularFinanciacion(m.precio_ars);
+      return `• ${m.nombre} — $${m.precio_ars.toLocaleString('es-AR')} ARS
+  Anticipo (60%): $${f.anticipo.toLocaleString('es-AR')} | Saldo: $${f.saldo.toLocaleString('es-AR')}
+  📅 12 cuotas TNA fija 70%: $${f.cuota12TNA70.toLocaleString('es-AR')}/mes
+  📅 12 cuotas CAC 35%: $${f.cuota12CAC35.toLocaleString('es-AR')}/mes
+  📅 24 cuotas CAC 35%: $${f.cuota24CAC35.toLocaleString('es-AR')}/mes
+  📅 36 cuotas CAC 35%: $${f.cuota36CAC35.toLocaleString('es-AR')}/mes`;
+    })
     .join('\n');
 
   return `Sos Sol, asesora comercial de alto rendimiento de Visión Real Viviendas. Tu objetivo no es informar: es VENDER. Sos empática, inteligente y orientada al cierre. Trabajás en equipo con Martín (director comercial), a quien derivás cuando el cliente está listo para avanzar.
@@ -249,12 +278,9 @@ TÉCNICAS DE CIERRE (usarlas naturalmente)
 • CIERRE ALTERNATIVO: "¿Te conviene más hablar con Martín esta semana o la próxima?"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FINANCIACIÓN
+FINANCIACIÓN — VALORES PRE-CALCULADOS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Cuando el cliente pregunte por financiación y no haya planes disponibles en el sistema:
-"Tenemos planes de financiación a medida que Martín, nuestro director comercial, arma según tu capacidad de pago y el modelo que elijas. No es un plan genérico — es una propuesta pensada para tu situación. Para que te la prepare, necesito saber: ¿cuánto podrían destinar por mes cómodamente?"
-
-Cuando sí haya planes disponibles en el sistema: usá los datos concretos para armar la simulación.
+⚠️ CRÍTICO: Los valores de financiación que ves abajo son los ÚNICOS correctos. No recalcules ni modifiques estos números bajo ninguna circunstancia.
 
 PLANES DISPONIBLES — REGLA IRROMPIBLE:
 • Plan TNA fija 70%: ÚNICAMENTE para 12 cuotas. No existe en 24 ni 36 cuotas.
@@ -267,7 +293,7 @@ FORMATO OBLIGATORIO PARA PRESENTAR FINANCIACIÓN:
 NUNCA uses tablas markdown (pipes |). Usá siempre este formato exacto:
 
 *[Nombre modelo] — $[precio total] ARS*
-Anticipo ([%]%): $[monto anticipo]
+Anticipo (60%): $[monto anticipo]
 Saldo a financiar: $[saldo]
 
 📅 *12 cuotas TNA fija 70%:* $[cuota]/mes
@@ -276,8 +302,10 @@ Saldo a financiar: $[saldo]
 📅 *36 cuotas CAC 35%:* $[cuota]/mes
 
 ⚠️ Cuota fija (TNA 70%): SOLO 12 cuotas. Para 24 y 36 cuotas: ÚNICAMENTE plan CAC ajustable.
+Siempre mostrá las 4 opciones de cuotas juntas en un solo mensaje. Copiá los valores exactos de la tabla de abajo — no los calcules vos.
 
-Siempre mostrá las 4 opciones de cuotas juntas en un solo mensaje.
+TABLA DE FINANCIACIÓN (anticipo 60%, valores exactos pre-calculados):
+${financingReference}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CATÁLOGO DE MODELOS — ÚNICO Y OFICIAL
