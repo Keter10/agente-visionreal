@@ -12,7 +12,7 @@ export const COMPANY = {
     'Ofrecemos modelos de catálogo y también proyectos personalizados. El cliente debe tener su propio terreno.',
 };
 
-const BASE_URL = 'https://agente-visionreal.onrender.com/catalogos';
+const BASE_URL = 'https://agente-visionreal.onrender.com';
 
 const FALLBACK_PRICES = {
   pb: 310_000,
@@ -36,9 +36,9 @@ const BASE_MODELS = [
   { id: 'vr-103', nombre: 'VR 103m²', tipo: 'Planta Baja', m2: 103, ambientes: '3 dormitorios + 2 baños + sala + comedor', descripcion: 'Nuestra vivienda más amplia, con todos los ambientes diferenciados.',          catalogo_pdf: `${BASE_URL}/catalogo-103m2.pdf` },
   // ── DOS PLANTAS ───────────────────────────────────────────────────────────
   { id: 'vr-duplex-30', nombre: 'VR Dúplex 30m²', tipo: 'Dos Plantas', m2: 30, ambientes: '2 dormitorios + baño + estar',       descripcion: 'Dos plantas. Máximo aprovechamiento vertical del terreno.', catalogo_pdf: `${BASE_URL}/catalogo-duplex-30m2.pdf` },
-  { id: 'vr-duplex-40', nombre: 'VR Dúplex 40m²', tipo: 'Dos Plantas', m2: 40, ambientes: '2 dormitorios + 2 baños + estar',    descripcion: 'Dos plantas. Diseño moderno con doble altura.',            catalogo_pdf: `${BASE_URL}/catalogo-40m2-duplex.pdf` },
+  { id: 'vr-duplex-40', nombre: 'VR Dúplex 40m²', tipo: 'Dos Plantas', m2: 40, ambientes: '2 dormitorios + 2 baños + estar',    descripcion: 'Dos plantas. Diseño moderno con doble altura.',            catalogo_pdf: `${BASE_URL}/catalogo-duplex-40m2.pdf` },
   // ── CABAÑAS Y QUINCHOS ────────────────────────────────────────────────────
-  { id: 'vr-cabana-25',  nombre: 'VR Cabaña 25m²',  tipo: 'Cabaña',  m2: 25, ambientes: '1 dormitorio + baño + estar-comedor', descripcion: 'Cabaña Wood Frame ideal para turismo, campo o uso recreativo.',                               catalogo_pdf: `${BASE_URL}/catalogo-25m2-cabana.pdf` },
+  { id: 'vr-cabana-25',  nombre: 'VR Cabaña 25m²',  tipo: 'Cabaña',  m2: 25, ambientes: '1 dormitorio + baño + estar-comedor', descripcion: 'Cabaña Wood Frame ideal para turismo, campo o uso recreativo.',                               catalogo_pdf: `${BASE_URL}/catalogo-cabana-25m2.pdf` },
   { id: 'vr-quincho-40', nombre: 'VR Quincho 40m²', tipo: 'Quincho', m2: 40, ambientes: 'Salón + parrilla + baño',              descripcion: 'Quincho de madera para entretener. Ideal como complemento de la vivienda principal.', catalogo_pdf: `${BASE_URL}/catalogo-quincho-40m2.pdf` },
 ];
 
